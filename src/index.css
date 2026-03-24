@@ -1,0 +1,59 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg-gradient, linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%));
+  color: var(--text-primary, #0f172a);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Light Mode Defaults */
+:root {
+  --bg-primary: 0 0% 100%;
+  --bg-secondary: 219 29% 95%;
+  --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  --bg-card: 0 0% 100%;
+  --bg-input: 0 0% 100%;
+  --text-primary: 215 28% 17%;
+  --text-secondary: 217 33% 40%;
+  --text-muted: 217 33% 60%;
+  --border: 220 13% 91%;
+  --border-hover: 220 13% 82%;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+/* Dark Mode */
+.dark {
+  --bg-primary: 240 10% 3.9%;
+  --bg-secondary: 240 4% 11%;
+  --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  --bg-card: 240 4% 11%;
+  --bg-input: 240 7% 13%;
+  --text-primary: 240 10% 98%;
+  --text-secondary: 240 7% 75%;
+  --text-muted: 240 5% 55%;
+  --border: 240 5% 22%;
+  --border-hover: 240 5% 30%;
+  --shadow-sm: 240 10% 3.9% / 0.15;
+  --shadow-md: 240 10% 3.9% / 0.2;
+  --shadow-lg: 240 10% 3.9% / 0.25;
+}
+
+/* Google Fonts CSP fixed */
+.dark [class*="bg-"], .dark [class*="shadow-"] { color-scheme: dark; }
