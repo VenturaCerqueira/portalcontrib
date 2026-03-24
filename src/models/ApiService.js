@@ -4,6 +4,16 @@ class ApiService {
   static async validateCPF(rawCPF) {
     try {
       const response = await fetch(`${BACKEND_URL}/api/validate-cpf/${rawCPF}`);
+      
+      if (!response.ok) {
+        // Handle rate limit (429) and other errors gracefully
+        if (response.status === 429) {
+          throw new Error('Muitas requisições. Aguarde 15s e tente novamente.');
+        }
+        const errorText = await response.text();
+        throw new Error(`Servidor: ${response.status} - ${errorText}`);
+      }
+      
       return await response.json();
     } catch (error) {
       console.error('CPF validation error:', error);

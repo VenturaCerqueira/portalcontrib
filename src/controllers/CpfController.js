@@ -25,32 +25,41 @@ export const useCpfController = (setValue, trigger) => {
     }
 
     try {
+      console.log('🌐 Chamando API para CPF:', rawCPF);
       const result = await ApiService.validateCPF(rawCPF);
+      console.log('📥 Resposta completa API:', JSON.stringify(result, null, 2));
       
       if (result.valid && result.data) {
         const data = result.data;
         setCpfValid(true);
         setCpfData(data);
         
-        // Auto-fill fields
+        // Auto-fill PERSONAL fields
         setValue('nome', data.nome || '');
-
+        setValue('dataNascimento', data.data_nascimento || '');
         setValue('sexo', data.sexo || '');
         setValue('rg', data.rg || '');
         setValue('email', data.email || '');
         if (data.celular_wpp) setValue('celular', data.celular_wpp);
-        if (data.telefone) setValue('telContato', data.telefone);
-        
-        await trigger(['nome', 'dataNascimento', 'sexo', 'rg', 'email', 'celular', 'telContato']);
+        if (data.telefone || data.contato) setValue('telContato', data.telefone || data.contato || '');
+
+        // Auto-fill ENDEREÇO RESIDENCIAL ✅ ATIVADO
+        setValue('cep', data.cep || '');
+        setValue('logradouro', data.logradouro || data.endereco || '');
+        setValue('bairro', data.bairro_nome || '');
+        setValue('municipio', '');
+        setValue('endereco', data.numero_complemento || data.numero || '');
+        await trigger(['cep', 'logradouro', 'endereco', 'bairro', 'municipio']);
         setCpfError('');
-        setCpfSuccessMsg('');
+        setCpfSuccessMsg('✅ Endereço residencial carregado do cadastro municipal!');
       } else {
         setCpfValid(true);
         setCpfData({ nome: '', dataNascimento: '' });
         setCpfError(result.message || 'CPF não encontrado no cadastro municipal');
       }
     } catch (error) {
-      console.error('Erro busca CPF:', error);
+      console.error('❌ ERRO COMPLETO CPF:', error.message, error);
+      console.error('Stack:', error.stack);
       setCpfValid(true);
       setCpfError('Erro ao consultar sistema municipal');
     } finally {

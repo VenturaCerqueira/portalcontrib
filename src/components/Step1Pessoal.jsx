@@ -40,36 +40,40 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
   useEffect(() => {
     console.log('CPF Value monitor:', cpfValue);
     const rawCpf = cpfValue.replace(/\D/g, '');
-    console.log('🔍 CPF monitorado:', cpfValue, '→ raw:', rawCpf);
+    console.log('🔍 CPF monitorado:', cpfValue, '→ raw:', rawCpf.length);
     
     if (rawCpf.length === 11) {
+      console.log('🚀 Executando validateCPF...');
       validateCPF(cpfValue);
     }
   }, [cpfValue, validateCPF]);
 
-  useEffect(() => {
-    const handleCep = async () => {
-      const cleanCep = watchedCep?.replace(/\D/g, '') || '';
-      if (cleanCep.length !== 8) return;
-      
-      setIsLoadingCep(true);
-      setCepError('');
-      
-      try {
-        const endereco = await fetchCep(cleanCep);
-        setValue('logradouro', endereco.logradouro);
-        setValue('bairro', endereco.bairro);
-        setValue('municipio', endereco.localidade);
-        await trigger(['logradouro', 'bairro', 'municipio']);
-      } catch (error) {
-        setCepError(error.message);
-      } finally {
-        setIsLoadingCep(false);
-      }
-    };
 
-    handleCep();
-  }, [watchedCep, setValue, trigger]);
+  const handleCepManual = async () => {
+    const cleanCep = watchedCep?.replace(/\D/g, '') || '';
+    if (cleanCep.length !== 8) {
+      setCepError('CEP deve ter 8 dígitos');
+      return;
+    }
+    
+    console.log('🔍 CEP MANUAL:', cleanCep);
+    setIsLoadingCep(true);
+    setCepError('');
+    
+    try {
+      const endereco = await fetchCep(cleanCep);
+      console.log('📍 CEP MANUAL response:', endereco);
+      setValue('logradouro', endereco.logradouro);
+      setValue('bairro', endereco.bairro);
+      setValue('municipio', endereco.localidade);
+      await trigger(['logradouro', 'bairro', 'municipio']);
+      setCepError('');
+    } catch (error) {
+      setCepError(error.message);
+    } finally {
+      setIsLoadingCep(false);
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -207,15 +211,35 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
             <label className="block text-sm font-medium text-gray-700 mb-2">
               CEP <span className="text-red-500">*</span>
             </label>
-            <input
-              {...register('cep')}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors ${
-                (errors?.cep || cepError) ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="00000-000"
-            />
+            <div className="relative">
+              <input
+                {...register('cep')}
+                className={`w-full pl-10 pr-12 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 hover:border-orange-300 group ${
+                  (errors?.cep || cepError) ? 'border-red-500 ring-1 ring-red-200' : 'border-gray-300 hover:border-orange-300'
+                } pr-10`}
+                placeholder="00000-000"
+              />
+              <button
+                type="button"
+                onClick={handleCepManual}
+                disabled={isLoadingCep}
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-white border-l border-gray-200 hover:bg-orange-50 p-2 rounded-r-lg shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group-hover:bg-orange-50"
+                title="Buscar endereço por CEP"
+              >
+                {isLoadingCep ? (
+                  <svg className="w-4 h-4 text-orange-500 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4 text-gray-400 group-hover:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                )}
+              </button>
+            </div>
             {cepError && <p className="mt-1 text-sm text-red-600">{cepError}</p>}
-            {isLoadingCep && <p className="mt-1 text-sm text-orange-600">Carregando endereço...</p>}
+            {isLoadingCep && <p className="mt-1 text-sm text-orange-600">Carregando...</p>}
           </div>
 
           <div>
