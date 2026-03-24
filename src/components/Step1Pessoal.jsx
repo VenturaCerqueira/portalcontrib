@@ -10,20 +10,19 @@ import { useCpfController } from '../controllers/CpfController.js';
 const ESTADO_CIVIL = getEstadoCivilOptions();
 const SEXO_OPCOES = getSexoOptions();
 
-const MaskedCpfField = React.forwardRef(({ className, placeholder, ...props }, ref) => {
-  const [value, onChange] = useMask(masks.cpf);
+const MaskedCpfField = ({ field, className, placeholder, ...props }) => {
+  const [maskValue, maskOnChange] = useMask(masks.cpf, field.value || '', field.onChange);
   
   return (
     <input
       {...props}
-      ref={ref}
-      value={value}
-      onChange={onChange}
+      value={field.value || maskValue}
+      onChange={maskOnChange}
       className={className}
       placeholder={placeholder}
     />
   );
-});
+};
 
 MaskedCpfField.displayName = 'MaskedCpfField';
 
@@ -32,26 +31,25 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
   const [cepError, setCepError] = useState('');
 
   const cpfController = useCpfController(setValue, trigger);
-  const { cpfSuccessMsg, cpfError, validatingCPF, validateCPF } = cpfController;
+  const { cpfSuccessMsg, cpfValid, cpfError, validatingCPF, validateCPF } = cpfController;
 
   const watchedCep = watch('cep');
   const cpfValue = watch('cpf') || '';
 
-  // Debounced CPF validation
+  // Debounced CPF validation - FIXADA
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      const rawCpf = cpfValue.replace(/\\D/g, '');
-      if (rawCpf.length === 11) {
-        validateCPF(cpfValue);
-      }
-    }, 500);
-
-    return () => clearTimeout(timeoutId);
+    console.log('CPF Value monitor:', cpfValue);
+    const rawCpf = cpfValue.replace(/\D/g, '');
+    console.log('🔍 CPF monitorado:', cpfValue, '→ raw:', rawCpf);
+    
+    if (rawCpf.length === 11) {
+      validateCPF(cpfValue);
+    }
   }, [cpfValue, validateCPF]);
 
   useEffect(() => {
     const handleCep = async () => {
-      const cleanCep = watchedCep?.replace(/\\D/g, '') || '';
+      const cleanCep = watchedCep?.replace(/\D/g, '') || '';
       if (cleanCep.length !== 8) return;
       
       setIsLoadingCep(true);
@@ -86,18 +84,28 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
               name="cpf"
               control={control}
               render={({ field, fieldState: { error: fieldError } }) => (
-                <div>
-                  <MaskedCpfField 
-                    required={false}
-                    {...field}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all duration-200 ${
-                      fieldError || cpfError ? 'border-red-500 ring-red-200' : 'border-gray-300 hover:border-gray-400'
-                    }`}
-                    placeholder="000.000.000-00"
-                  />
+                <div className="space-y-1">
+                  <div className="relative">
+                    <MaskedCpfField 
+                      field={field}
+                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all duration-200 pr-10 ${
+                        fieldError || cpfError 
+                          ? 'border-red-500 ring-red-200' 
+                          : cpfValid 
+                            ? 'border-green-500 bg-green-50 ring-green-200' 
+                            : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                      placeholder="000.000.000-00"
+                    />
+                    {cpfValid && (
+                      <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </div>
+
                   {(cpfError || fieldError) && <p className="mt-1 text-sm text-red-600">{cpfError || fieldError.message}</p>}
                   {validatingCPF && <p className="mt-1 text-sm text-blue-600 animate-pulse">Consultando cadastro municipal...</p>}
-                  {cpfSuccessMsg && <p className="mt-1 text-sm text-green-600 font-medium">{cpfSuccessMsg}</p>}
                 </div>
               )}
             />
@@ -108,7 +116,7 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
             <input
               {...register('nome')}
               className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-errors?.nome ? 'border-red-500' : 'border-gray-300'
+                errors?.nome ? 'border-red-500' : 'border-gray-300'
               }`}
               placeholder="Digite o nome completo"
             />
@@ -123,7 +131,7 @@ errors?.nome ? 'border-red-500' : 'border-gray-300'
               type="date"
               {...register('dataNascimento')}
               className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-errors?.dataNascimento ? 'border-red-500' : 'border-gray-300'
+                errors?.dataNascimento ? 'border-red-500' : 'border-gray-300'
               }`}
               max="2005-12-31"
             />
@@ -147,28 +155,28 @@ errors?.dataNascimento ? 'border-red-500' : 'border-gray-300'
           </div>
         </div>
 
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Estado Civil <span className="text-red-500">*</span></label>
-              <select
-                {...register('estadoCivil')}
-                className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                    errors?.estadoCivil ? 'border-red-500' : 'border-gray-300'
-                }`}
-              >
-                <option value="">Selecione...</option>
-                {ESTADO_CIVIL.map((op) => (
-                  <option key={op.value} value={op.value}>{op.label}</option>
-                ))}
-              </select>
-              {errors?.estadoCivil?.message && <p className="mt-1 text-sm text-red-600">{errors?.estadoCivil?.message}</p>}
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">E-mail</label>
-              <input {...register('email')} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="exemplo@dominio.com" />
-              {errors?.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
-            </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Estado Civil <span className="text-red-500">*</span></label>
+            <select
+              {...register('estadoCivil')}
+              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                errors?.estadoCivil ? 'border-red-500' : 'border-gray-300'
+              }`}
+            >
+              <option value="">Selecione...</option>
+              {ESTADO_CIVIL.map((op) => (
+                <option key={op.value} value={op.value}>{op.label}</option>
+              ))}
+            </select>
+            {errors?.estadoCivil?.message && <p className="mt-1 text-sm text-red-600">{errors?.estadoCivil?.message}</p>}
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">E-mail</label>
+            <input {...register('email')} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="exemplo@dominio.com" />
+            {errors?.email && <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>}
+          </div>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Celular <span className="text-red-500">*</span></label>
@@ -189,11 +197,12 @@ errors?.dataNascimento ? 'border-red-500' : 'border-gray-300'
             <label className="block text-sm font-medium text-gray-700 mb-2">NIT/PIS</label>
             <input {...register('nit')} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
           </div>
-        </div>      </section>
+        </div>      
+      </section>
 
       <section>
         <h3 className="text-xl font-bold text-gray-900 mb-6 border-b border-gray-200 pb-3">Endereço Residencial *</h3>
-<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               CEP <span className="text-red-500">*</span>
@@ -261,4 +270,3 @@ errors?.dataNascimento ? 'border-red-500' : 'border-gray-300'
 };
 
 export default Step1Pessoal;
-

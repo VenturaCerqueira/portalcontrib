@@ -1,10 +1,13 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 
-export const useMask = (mask) => {
-  const [value, setValue] = useState('');
+export const useMask = (mask, valueProp = '', onChangeProp) => {
+  const [value, setValue] = useState(valueProp);
   const valueRef = useRef('');
 
   const onChange = useCallback((e) => {
+    e.persist();
+    onChangeProp(e);
+    // Native mask logic...
     // Prevent recursive calls from setSelectionRange
     if (e.nativeEvent.isComposing || e.inputType === 'insertCompositionText') {
       return;

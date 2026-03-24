@@ -10,9 +10,9 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: 'http://localhost:5173',
   credentials: true
-}));
+})); 
 
 
 // Rate limiting (reuse frontend logic)

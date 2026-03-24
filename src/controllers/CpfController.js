@@ -34,7 +34,7 @@ export const useCpfController = (setValue, trigger) => {
         
         // Auto-fill fields
         setValue('nome', data.nome || '');
-        setValue('dataNascimento', data.data_nascimento || '');
+
         setValue('sexo', data.sexo || '');
         setValue('rg', data.rg || '');
         setValue('email', data.email || '');
@@ -43,7 +43,7 @@ export const useCpfController = (setValue, trigger) => {
         
         await trigger(['nome', 'dataNascimento', 'sexo', 'rg', 'email', 'celular', 'telContato']);
         setCpfError('');
-        setCpfSuccessMsg('✅ Dados carregados do cadastro municipal!');
+        setCpfSuccessMsg('');
       } else {
         setCpfValid(true);
         setCpfData({ nome: '', dataNascimento: '' });
