@@ -17,15 +17,6 @@ const SEXO_OPCOES = [
   { value: 'F', label: 'Feminino' }
 ];
 
-const ATIVIDADE_PRETENDIDA_OPTIONS = [
-  { value: 'venda_alimentos', label: 'Venda de Alimentos' },
-  { value: 'venda_bebidas', label: 'Venda de Bebidas' },
-  { value: 'brinquedos', label: 'Brinquedos/Infláveis' },
-  { value: 'trailer_food', label: 'Trailer Food' },
-  { value: 'ambulante', label: 'Ambulante/Carrinho' },
-  { value: 'outros', label: 'Outros' }
-];
-
 const TIPO_LOCAL_ATIVIDADE_OPTIONS = [
   { value: 'camarote', label: 'CAMAROTE' },
   { value: 'box', label: 'BOX' },
@@ -64,7 +55,7 @@ export const cadastroSchema = z.object({
   telContato: z.string().optional(),
   celular: z.string().min(1, 'Celular obrigatório'),
   email: z.string().email('E-mail inválido').optional().or(z.literal('')),
-  atividadePretendida: z.enum(ATIVIDADE_PRETENDIDA_OPTIONS.map(opt => opt.value), { errorMap }).refine(val => val && val.length > 0, 'Atividade pretendida é obrigatória'),
+  atividadePretendida: z.string().optional(),
   tipoLocalAtividade: z.enum(TIPO_LOCAL_ATIVIDADE_OPTIONS.map(opt => opt.value), { errorMap }).refine(val => val && val.length > 0, 'Tipo local da atividade é obrigatório'),
   principaisProdutos: z.string().min(1, 'Principais produtos obrigatórios').max(500, 'Máx 500 caracteres'),
   localNegocio: z.enum(['fixo', 'movel'], { errorMap }).refine(val => val && val.length > 0, 'Tipo de local do negócio é obrigatório'),
@@ -95,7 +86,7 @@ export const cadastroSchema = z.object({
 
 export const getEstadoCivilOptions = () => ESTADO_CIVIL;
 export const getSexoOptions = () => SEXO_OPCOES;
-export const getAtividadePretendidaOptions = () => ATIVIDADE_PRETENDIDA_OPTIONS;
+
 export const getTipoLocalAtividadeOptions = () => TIPO_LOCAL_ATIVIDADE_OPTIONS;
 export const validateCPF = isValidCPF;
 

@@ -28,7 +28,7 @@ const form = useForm({
       telContato: '',
       celular: '',
       email: '',
-      atividadePretendida: '',
+      //atividadePretendida: '',
       tipoLocalAtividade: '',
       principaisProdutos: '',
       localNegocio: '',
@@ -57,7 +57,7 @@ const nextStep = async () => {
     console.log('📊 Form values before validation:', values);
     
     // Step-specific fields - Added cpf for step 1
-    const stepFields = currentStep === 1 ? ['cpf','nome','sexo','dataNascimento','estadoCivil','celular','cep','logradouro','endereco','bairro','uf','municipio'] : currentStep === 2 ? ['atividadePretendida', 'tipoLocalAtividade', 'principaisProdutos', 'localNegocio', 'jaTrabalhaPrefeituraEventos'] : ['situacaoOcupacional'];
+    const stepFields = currentStep === 1 ? ['cpf','nome','sexo','dataNascimento','estadoCivil','celular','cep','logradouro','endereco','bairro','uf','municipio'] : currentStep === 2 ? ['tipoLocalAtividade', 'principaisProdutos', 'localNegocio', 'jaTrabalhaPrefeituraEventos'] : ['situacaoOcupacional'];
     const stepValid = await trigger(stepFields);
     console.log('📋 Step validation:', stepValid);
     

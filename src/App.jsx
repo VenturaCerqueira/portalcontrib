@@ -5,12 +5,12 @@ import ProgressBar from './components/ProgressBar';
 import Step1Pessoal from './components/Step1Pessoal';
 import Step2Atividade from './components/Step2Atividade';
 import Step3Trabalho from './components/Step3Trabalho';
-import { getEstadoCivilOptions, getSexoOptions, getAtividadePretendidaOptions, getTipoLocalAtividadeOptions } from './models/CadastroModel.js';
+import { getEstadoCivilOptions, getSexoOptions, getTipoLocalAtividadeOptions } from './models/CadastroModel.js';
 import { useFormController } from './controllers/FormController.js';
 
 const ESTADO_CIVIL = getEstadoCivilOptions();
 const SEXO_OPCOES = getSexoOptions();
-const ATIVIDADE_OPTIONS = getAtividadePretendidaOptions();
+//const ATIVIDADE_OPTIONS = getAtividadePretendidaOptions();
 const TIPO_LOCAL_OPTIONS = getTipoLocalAtividadeOptions();
 
 function App() {
@@ -143,19 +143,18 @@ function App() {
                       </div>
                     </details>
 
-                    {/* Atividade Pretendida */}
+                    {/* Detalhes da Atividade */}
                     <details className="bg-purple-50 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-700 rounded-2xl p-6 group [&_summary]:cursor-pointer">
                       <summary className="flex items-center justify-between font-semibold text-lg text-gray-900 dark:text-slate-100 mb-4 hover:bg-purple-100 dark:hover:bg-purple-900/50 rounded-xl p-3 transition-all">
                         <span className="flex items-center">
                           <svg className="w-6 h-6 mr-3 text-purple-600 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                           </svg>
-                          Atividade Pretendida
+                          Detalhes da Atividade
                         </span>
                         <button type="button" onClick={(e) => { e.stopPropagation(); setCurrentStep(2); }} className="text-purple-600 hover:text-purple-700 font-semibold px-4 py-2 bg-purple-100 hover:bg-purple-200 rounded-lg transition-all">Editar</button>
                       </summary>
                       <div className="space-y-3 text-sm">
-                        <p><span className="font-medium text-gray-800 dark:text-slate-200">Atividade:</span> <span className="ml-2">{ATIVIDADE_OPTIONS.find(a => a.value === getValues('atividadePretendida'))?.label || '---'}</span></p>
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Tipo Local:</span> <span className="ml-2">{TIPO_LOCAL_OPTIONS.find(t => t.value === getValues('tipoLocalAtividade'))?.label || '---'}</span></p>
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Principais Produtos:</span> <span className="ml-2">{getValues('principaisProdutos') || '---'}</span></p>
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Local Negócio:</span> <span className="ml-2">{getValues('localNegocio') === 'fixo' ? 'Fixo' : getValues('localNegocio') === 'movel' ? 'Móvel' : '---'}</span></p>

@@ -1,8 +1,7 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
-import { getAtividadePretendidaOptions, getTipoLocalAtividadeOptions } from '../models/CadastroModel.js';
+import { getTipoLocalAtividadeOptions } from '../models/CadastroModel.js';
 
-const ATIVIDADE_OPTIONS = getAtividadePretendidaOptions();
 const TIPO_LOCAL_OPTIONS = getTipoLocalAtividadeOptions();
 
 const Step2Atividade = ({ control, errors, register, watch }) => {
@@ -12,42 +11,8 @@ const Step2Atividade = ({ control, errors, register, watch }) => {
         <svg className="w-7 h-7 mr-3 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
         </svg>
-        Atividade Pretendida
+        Detalhes da Atividade
       </h3>
-      
-      {/* 1. Atividade Pretendida - SELECT */}
-      <div className="lg:col-span-3">
-        <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">
-          Atividade Pretendida <span className="text-red-500">*</span>
-        </label>
-        <Controller
-          name="atividadePretendida"
-          control={control}
-          rules={{ required: 'Atividade pretendida é obrigatória' }}
-          render={({ field, fieldState: { error } }) => (
-            <select 
-              {...field}
-              className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-purple-500 dark:focus:border-purple-400 transition-all ${
-                error 
-                  ? 'border-red-500 ring-red-200 bg-red-50 dark:bg-red-900/20' 
-                  : 'border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-800 hover:border-purple-300'
-              }`}
-            >
-              <option value="">Selecione a atividade pretendida...</option>
-              {ATIVIDADE_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          )}
-        />
-{errors?.atividadePretendida && (
-          <label className="text-red-500 text-xs mt-1 block font-medium animate-pulse">
-            * {errors.atividadePretendida.message}
-          </label>
-        )}
-      </div>
 
       {/* 2. Tipo Local Atividade - SELECT */}
       <div className="lg:col-span-3">
