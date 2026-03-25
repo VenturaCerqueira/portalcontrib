@@ -18,7 +18,7 @@ app.use(cors({
 // Rate limiting (reuse frontend logic)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 min
-  max: 10, // 10 reqs per IP
+  max: 100, // Increased for dev
   message: 'Too many requests, try again later.'
 });
 app.use('/api/', limiter);
@@ -48,6 +48,33 @@ app.get('/api/health', async (req, res) => {
 });
 
 // GET /api/validate-cpf/:cpf - Validate CPF in contribuinte table
+app.get('/api/contribuinte/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    if (isNaN(id) || id <= 0) {
+      return res.status(400).json({ error: 'ID inválido' });
+    }
+
+    const query = `
+SELECT TRIM(razao_social) as nome, imagem 
+      FROM contribuinte 
+      WHERE id = ? AND situacao = 1 
+      LIMIT 1
+    `;
+
+    const [rows] = await pool.execute(query, [id]);
+    
+    if (rows.length > 0) {
+      res.json({ success: true, data: rows[0] });
+    } else {
+      res.status(404).json({ success: false, error: 'Contribuinte não encontrado ou inativo' });
+    }
+  } catch (err) {
+    console.error('Erro /api/contribuinte:', err);
+    res.status(500).json({ error: 'Erro de servidor' });
+  }
+});
+
 app.get('/api/validate-cpf/:cpf', async (req, res) => {
   try {
 const cpfRaw = req.params.cpf.replace(/\D/g, '');

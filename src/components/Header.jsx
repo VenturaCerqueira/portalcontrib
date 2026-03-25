@@ -1,18 +1,58 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Bars3Icon, XMarkIcon, BriefcaseIcon } from '@heroicons/react/24/outline'
+
+import ApiService from '../models/ApiService'
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [contribuinteNome, setContribuinteNome] = useState('PREFEITURA MUNICIPAL DE RIACHÃO DO JACUÍPE')
+  const [contribuinteImagem, setContribuinteImagem] = useState('')
+  const [imageLoading, setImageLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
+  const [fetchError, setFetchError] = useState(null)
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  useEffect(() => {
+    const fetchContribuinte = async () => {
+      try {
+        setIsLoading(true)
+        setFetchError(null)
+        const response = await ApiService.getContribuinte(1)
+        if (response.success) {
+          if (response.data.nome) {
+            setContribuinteNome(response.data.nome)
+          }
+          if (response.data.imagem) {
+            setContribuinteImagem(response.data.imagem)
+            setImageLoading(false) // Force show immediately
+          } else {
+            setImageLoading(false)
+          }
+        }
+      } catch (error) {
+        console.error('Erro ao carregar nome do contribuinte:', error)
+        setFetchError(error.message)
+        // Fallback remains prefeitura name
+      } finally {
+        setIsLoading(false)
+      }
+    }
 
+    fetchContribuinte()
+  }, [])
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen)
   }
+
+  const titleContent = isLoading ? (
+    <div className="h-8 md:h-10 bg-gradient-to-r from-white/20 to-white/10 animate-pulse rounded-lg w-64 md:w-96" />
+  ) : (
+    contribuinteNome
+  )
 
   return (
     <header className="w-full fixed top-0 left-0 right-0 z-50 bg-gradient-to-r from-[#0052cc]/95 to-blue-600/95 dark:from-[#0052cc]/90 dark:to-blue-700/90 backdrop-blur-xl shadow-lg dark:shadow-blue-900/50 border-b border-blue-200/50 dark:border-blue-700/50">
@@ -23,12 +63,29 @@ const Header = () => {
             className="flex items-center space-x-3 group cursor-pointer hover:opacity-80 transition-opacity duration-300 flex-shrink-0"
             onClick={scrollToTop}
           >
-            <div className="w-12 h-12 bg-gradient-to-br from-[#0052cc] to-blue-600 dark:from-blue-400 dark:to-blue-500 rounded-xl flex items-center justify-center shadow-lg ring-2 ring-white/50 dark:ring-blue-300/50">
-              <BriefcaseIcon className="w-7 h-7 text-white" />
-            </div>
+            {contribuinteImagem ? (
+              <div className="w-20 h-20 rounded-full bg-white shadow-xl overflow-hidden">
+                {imageLoading && <div className="w-full h-full bg-gray-200 animate-pulse rounded-full" />}
+                <img 
+                  src={contribuinteImagem} 
+                  alt="Logo Contribuinte"
+                  className={`w-full h-full object-contain ${imageLoading ? 'opacity-0' : 'opacity-100'}`}
+                  onLoad={() => setImageLoading(false)}
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    setContribuinteImagem('');
+                    setImageLoading(false);
+                  }}
+                />
+              </div>
+            ) : (
+              <div className="w-20 h-20 bg-white rounded-full shadow-xl overflow-hidden flex items-center justify-center animate-pulse">
+                <BriefcaseIcon className="w-10 h-10 text-[#0052cc]" />
+              </div>
+            )}
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight drop-shadow-lg">
-                PREFEITURA MUNICIPAL DE RIACHÃO DO JACUÍPE1
+                {titleContent}
               </h1>
               <p className="text-sm font-semibold text-slate-100 dark:text-slate-200 tracking-wide">
                 Credenciamento de Ambulantes

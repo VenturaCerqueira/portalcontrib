@@ -35,6 +35,24 @@ class ApiService {
     } catch (error) {      throw new Error(`Erro ao enviar: ${error.message}`);   }
   }
 
+  static async getContribuinte(id) {
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/contribuinte/${id}`);
+      
+      if (!response.ok) {
+        if (response.status === 429) {
+          throw new Error('Muitas requisições. Aguarde 15s.');
+        }
+        const errorText = await response.text();
+        throw new Error(`Servidor: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      throw new Error(`Erro ao buscar contribuinte: ${error.message}`);
+    }
+  }
+
   static async healthCheck() {
     try {
       const response = await fetch(`${BACKEND_URL}/api/health`);
