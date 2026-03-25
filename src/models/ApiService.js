@@ -1,4 +1,4 @@
-const BACKEND_URL = 'http://localhost:3001';
+const BACKEND_URL = import.meta.env.VITE_API_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3001') + '/api';
 
 class ApiService {
   static async validateCPF(rawCPF) {
