@@ -81,10 +81,14 @@ const cpfRaw = req.params.cpf.replace(/\D/g, '');
         cf.cnh,
         cf.profissao,
         cf.estado_civil,
-        cf.data_nascimento
+        cf.data_nascimento,
+        ci.nome as municipio,
+        e.uf as estado_uf
       FROM contribuinte c 
       LEFT JOIN contribuinte_fisico cf ON c.id = cf.fk_contribuinte 
       LEFT JOIN bairro b ON c.fk_bairro = b.id
+      LEFT JOIN cidade ci ON c.fk_cidade = ci.id
+      LEFT JOIN estado e ON ci.fk_estado = e.id
       WHERE TRIM(c.cpf_cnpj) = ? AND c.situacao = 1 
       LIMIT 1
     `;

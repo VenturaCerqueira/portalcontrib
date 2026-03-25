@@ -7,6 +7,7 @@ export const useCpfController = (setValue, trigger) => {
   const [cpfSuccessMsg, setCpfSuccessMsg] = useState('');
   const [cpfValid, setCpfValid] = useState(false);
   const [cpfError, setCpfError] = useState('');
+  const [cpfWarning, setCpfWarning] = useState('');
   const [validatingCPF, setValidatingCPF] = useState(false);
 
   const validateCPF = useCallback(async (maskedCPF) => {
@@ -15,6 +16,7 @@ export const useCpfController = (setValue, trigger) => {
 
     setValidatingCPF(true);
     setCpfError('');
+    setCpfWarning('');
 
     const valid = isValidCPF(rawCPF);
     if (!valid) {
@@ -43,25 +45,28 @@ export const useCpfController = (setValue, trigger) => {
         if (data.celular_wpp) setValue('celular', data.celular_wpp);
         if (data.telefone || data.contato) setValue('telContato', data.telefone || data.contato || '');
 
-        // Auto-fill ENDEREÇO RESIDENCIAL ✅ ATIVADO
+// Auto-fill ENDEREÇO RESIDENCIAL ✅ ATIVADO
         setValue('cep', data.cep || '');
         setValue('logradouro', data.logradouro || data.endereco || '');
+
         setValue('bairro', data.bairro_nome || '');
-        setValue('municipio', '');
+        setValue('municipio', data.municipio || '');
+        setValue('uf', data.estado_uf || '');
         setValue('endereco', data.numero_complemento || data.numero || '');
-        await trigger(['cep', 'logradouro', 'endereco', 'bairro', 'municipio']);
+        await trigger(['nome', 'dataNascimento', 'sexo', 'estadoCivil', 'celular', 'cep', 'logradouro', 'endereco', 'bairro', 'municipio', 'uf']);
         setCpfError('');
-        setCpfSuccessMsg('✅ Endereço residencial carregado do cadastro municipal!');
+        setCpfSuccessMsg('✅ Dados carregados com sucesso do cadastro municipal!');
       } else {
         setCpfValid(true);
         setCpfData({ nome: '', dataNascimento: '' });
-        setCpfError(result.message || 'CPF não encontrado no cadastro municipal');
+        setCpfWarning('CPF válido, porém não encontrado no cadastro municipal. Preencha os dados manualmente.');
+        await trigger(['nome', 'dataNascimento', 'sexo', 'estadoCivil', 'celular', 'logradouro', 'endereco', 'bairro']);
       }
     } catch (error) {
       console.error('❌ ERRO COMPLETO CPF:', error.message, error);
       console.error('Stack:', error.stack);
       setCpfValid(true);
-      setCpfError('Erro ao consultar sistema municipal');
+      // Silent on API error, keep yellow if previous warning
     } finally {
       setValidatingCPF(false);
     }
@@ -72,6 +77,7 @@ export const useCpfController = (setValue, trigger) => {
     cpfSuccessMsg,
     cpfValid,
     cpfError,
+    cpfWarning,
     validatingCPF,
     validateCPF
   };

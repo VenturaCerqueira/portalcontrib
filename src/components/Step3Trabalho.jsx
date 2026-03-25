@@ -1,31 +1,19 @@
 import React, { useEffect, useRef } from 'react';
-import { Controller } from 'react-hook-form';
-import { useMask, masks } from '../hooks/useMask';
+// import { Controller } from 'react-hook-form'; // Removed - using register instead
+
+import { useMask, masks } from '../hooks/useMask.jsx';
 
 
 const Step3Trabalho = ({ register, control, errors, watch, getValues, setValue }) => {
-  const situacaoOcupacional = watch('situacaoOcupacional');
+  const situacaoOcupacional = watch('situacaoOcupacional') || '';
 
   const isFuncionario = situacaoOcupacional === 'funcionario';
   const isInformal = situacaoOcupacional === 'informal';
   const isMEI = situacaoOcupacional === 'mei';
 
-  useEffect(() => {
-    if (situacaoOcupacional === 'informal') {
-      setValue('cpfInformal', getValues('cpf') || '');
-    }
-  }, [situacaoOcupacional, setValue, getValues]);
-
-  const cpfInformalCursorRef = useRef(null);
-  const [cpfInformalValue, onCpfInformalChange, setCpfInformalValue, setCpfInformalCursorPos] = useMask(masks.cpf);
 
 
-// Sync hook value to form (for cpfInformal)
-  useEffect(() => {
-    if (isInformal) {
-      setValue('cpfInformal', cpfInformalValue, { shouldValidate: true });
-    }
-  }, [cpfInformalValue, setValue, isInformal]);
+
 
 
   return (
@@ -51,27 +39,27 @@ const Step3Trabalho = ({ register, control, errors, watch, getValues, setValue }
             <span className="font-medium text-gray-900 dark:text-slate-100 group-hover:text-teal-600 dark:group-hover:text-teal-400">Funcionário(a) de Empresa</span>
           </label>
           <label className="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-teal-300 hover:shadow-md transition-all cursor-pointer group">
-            <input 
+              <input 
               type="radio" 
               value="informal" 
-              {...register('situacaoOcupacional', { required: true })} 
+              {...register('situacaoOcupacional')} 
               className="mr-3 text-teal-600 w-5 h-5"
               autoComplete="off"
             />
             <span className="font-medium text-gray-900 group-hover:text-teal-600">Trabalhador Informal</span>
           </label>
           <label className="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-teal-300 hover:shadow-md transition-all cursor-pointer group">
-            <input 
+              <input 
               type="radio" 
               value="mei" 
-              {...register('situacaoOcupacional', { required: true })} 
+              {...register('situacaoOcupacional')} 
               className="mr-3 text-teal-600 w-5 h-5"
               autoComplete="off"
             />
             <span className="font-medium text-gray-900 group-hover:text-teal-600">MEI</span>
           </label>
         </div>
-        {errors.situacaoOcupacional && <label className="text-red-500 text-xs mt-2 block font-medium animate-pulse">* {errors.situacaoOcupacional.message}</label>}
+{errors?.situacaoOcupacional && <label className="text-red-500 text-xs mt-2 block font-medium animate-pulse">* {errors.situacaoOcupacional.message}</label>}
       </div>
 
       {/* Funcionário de Empresa */}
@@ -118,36 +106,41 @@ const Step3Trabalho = ({ register, control, errors, watch, getValues, setValue }
       {isInformal && (
         <>
           <h4 className="lg:col-span-3 text-lg font-semibold text-gray-800 mb-4">Dados do Informal</h4>
-          <Controller
-            name="cpfInformal"
-            control={control}
-            rules={{ required: 'CPF obrigatório para informal' }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <div className="lg:col-span-1">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">CPF *</label>
+          <div className="lg:col-span-1">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Dados Pessoais <span className="text-red-500">*</span></label>
+            <div className="space-y-2">
+              <div className="relative">
+                <label className="block text-xs text-gray-500">Nome</label>
                 <input 
                   type="text"
-                  ref={(el) => el && setCpfInformalCursorPos(el, cpfInformalCursorRef.current)}
-                  value={cpfInformalValue}
-onChange={(e) => {
-                    onCpfInformalChange(e);
-                    onChange(cpfInformalValue);
-                  }}
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all ${
-                    error ? 'border-red-500 bg-red-50' : 'border-gray-300'
-                  }`}
-                  placeholder="000.000.000-00"
+                  value={watch('nome') ?? ''}
+                  readOnly
+                  className="w-full px-4 py-2 border border-gray-400 bg-gray-100 rounded-lg cursor-not-allowed text-gray-700 text-sm"
+                  placeholder="Nome da tela Pessoal"
                   autoComplete="off"
                 />
-                {errors.cpfInformal && <label className="text-red-500 text-xs mt-1 block font-medium animate-pulse">* {errors.cpfInformal.message}</label>}
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-green-600 font-medium">Auto</span>
               </div>
-            )}
-          />
+              <div className="relative">
+                <label className="block text-xs text-gray-500">CPF</label>
+                <input 
+                  type="text"
+                  value={watch('cpf') ?? ''}
+                  readOnly
+                  className="w-full px-4 py-2 border border-gray-400 bg-gray-100 rounded-lg cursor-not-allowed text-gray-700 text-sm"
+                  placeholder="CPF da tela Pessoal"
+                  autoComplete="off"
+                />
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-green-600 font-medium">Auto</span>
+              </div>
+            </div>
+            <input type="hidden" {...register('cpfInformal', { required: true })} value={watch('cpf') ?? ''} />
+
+          </div>
         </>
       )}
+
+
 
       {/* MEI */}
       {isMEI && (

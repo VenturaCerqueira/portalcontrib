@@ -17,6 +17,29 @@ const SEXO_OPCOES = [
   { value: 'F', label: 'Feminino' }
 ];
 
+const ATIVIDADE_PRETENDIDA_OPTIONS = [
+  { value: 'venda_alimentos', label: 'Venda de Alimentos' },
+  { value: 'venda_bebidas', label: 'Venda de Bebidas' },
+  { value: 'brinquedos', label: 'Brinquedos/Infláveis' },
+  { value: 'trailer_food', label: 'Trailer Food' },
+  { value: 'ambulante', label: 'Ambulante/Carrinho' },
+  { value: 'outros', label: 'Outros' }
+];
+
+const TIPO_LOCAL_ATIVIDADE_OPTIONS = [
+  { value: 'camarote', label: 'CAMAROTE' },
+  { value: 'box', label: 'BOX' },
+  { value: 'barraca_drink', label: 'BARRACA DRINK/COQUETEL' },
+  { value: 'barraca_zinco', label: 'BARRACA ZINCO' },
+  { value: 'brinquedo', label: 'BRINQUEDO' },
+  { value: 'trailer', label: 'TRAILER' },
+  { value: 'caixa_termica_isopor', label: 'CAIXA TERMICA - ISOPOR' },
+  { value: 'caixa_termica_polipropileno', label: 'CAIXA TERMICA - POLIPROPILENO' },
+  { value: 'tabuleiro', label: 'TABULEIRO' },
+  { value: 'area', label: 'AREA' },
+  { value: 'ambulante_carrinho', label: 'AMBULANTE/CARRINHO' }
+];
+
 const errorMap = (issue, ctx) => ({
   message: ctx.defaultError || 'Valor inválido',
 });
@@ -28,7 +51,7 @@ export const cadastroSchema = z.object({
     .min(1, 'CPF é obrigatório')
     .transform(val => val.replace(/\D/g, ''))
     .refine(raw => raw.length === 11, 'CPF deve ter 11 dígitos')
-    .refine(isValidCPF, 'CPF inválido (verifique os números)'),
+    .refine(isValidCPF, { message: 'CPF inválido (verifique os números)' }),
   rg: z.string().optional(),
   nit: z.string().optional(),
   dataNascimento: z.string().refine(val => val && new Date(val) <= new Date('2005-12-31'), { message: 'Data Nascimento obrigatória (máx 2005)' }),
@@ -41,7 +64,11 @@ export const cadastroSchema = z.object({
   telContato: z.string().optional(),
   celular: z.string().min(1, 'Celular obrigatório'),
   email: z.string().email('E-mail inválido').optional().or(z.literal('')),
-  atividadePretendida: z.string().min(1, 'Atividade pretendida obrigatória').max(750, 'Máx 750 caracteres'),
+  atividadePretendida: z.enum(ATIVIDADE_PRETENDIDA_OPTIONS.map(opt => opt.value), { errorMap }).refine(val => val && val.length > 0, 'Atividade pretendida é obrigatória'),
+  tipoLocalAtividade: z.enum(TIPO_LOCAL_ATIVIDADE_OPTIONS.map(opt => opt.value), { errorMap }).refine(val => val && val.length > 0, 'Tipo local da atividade é obrigatório'),
+  principaisProdutos: z.string().min(1, 'Principais produtos obrigatórios').max(500, 'Máx 500 caracteres'),
+  localNegocio: z.enum(['fixo', 'movel'], { errorMap }).refine(val => val && val.length > 0, 'Tipo de local do negócio é obrigatório'),
+  jaTrabalhaPrefeituraEventos: z.enum(['sim', 'nao'], { errorMap }).refine(val => val && val.length > 0, 'Responda se já trabalhou em eventos da prefeitura'),
   salarioDesejado: z.string().optional(),
   tempoExperiencia: z.string().optional(),
   situacaoOcupacional: z.enum(['funcionario', 'informal', 'mei'], { errorMap }).refine(val => val && val.length > 0),
@@ -51,7 +78,7 @@ export const cadastroSchema = z.object({
   empresaTel: z.string().optional(),
   cpfInformal: z.string().optional(),
   cnpjMEI: z.string().optional(),
-  meiNomeFantasia: z.string().optional(),
+  meiNomeFantasia: z.string().optional()
 }, { errorMap }).superRefine((data, ctx) => {
   if (data.situacaoOcupacional === 'funcionario') {
     if (!data.empresaNome) ctx.addIssue({ code: 'custom', message: 'Nome da empresa obrigatório', path: ['empresaNome'] });
@@ -68,5 +95,7 @@ export const cadastroSchema = z.object({
 
 export const getEstadoCivilOptions = () => ESTADO_CIVIL;
 export const getSexoOptions = () => SEXO_OPCOES;
+export const getAtividadePretendidaOptions = () => ATIVIDADE_PRETENDIDA_OPTIONS;
+export const getTipoLocalAtividadeOptions = () => TIPO_LOCAL_ATIVIDADE_OPTIONS;
 export const validateCPF = isValidCPF;
 

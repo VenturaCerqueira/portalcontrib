@@ -1,13 +1,10 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 
-export const useMask = (mask, valueProp = '', onChangeProp) => {
-  const [value, setValue] = useState(valueProp);
-  const valueRef = useRef('');
+export const useMask = (mask, initialValue = '', onValueChange = () => {}) => {
+  const [value, setValue] = useState(initialValue);
+  const valueRef = useRef(initialValue);
 
   const onChange = useCallback((e) => {
-    e.persist();
-    onChangeProp(e);
-    // Native mask logic...
     // Prevent recursive calls from setSelectionRange
     if (e.nativeEvent.isComposing || e.inputType === 'insertCompositionText') {
       return;
@@ -38,6 +35,9 @@ export const useMask = (mask, valueProp = '', onChangeProp) => {
     valueRef.current = masked;
     setValue(masked);
     
+    // Notify parent of new masked value (safe default prevents crash)
+    onValueChange(masked);
+    
     // Position cursor at same digit count from input cursor
     let newCursorDigits = 0;
     let newCursorPos = 0;
@@ -58,7 +58,7 @@ export const useMask = (mask, valueProp = '', onChangeProp) => {
     requestAnimationFrame(() => {
       el.setSelectionRange(newCursorPos, newCursorPos);
     });
-  }, [mask]);
+  }, [mask, onValueChange]);
 
   return [value, onChange, setValue];
 };
@@ -68,6 +68,8 @@ export const masks = {
   cpf: '000.000.000-00',
   cep: '00000-000',
   tel: '(00) 00000-0000',
-  cel: '(00) 90000-0000'
+  cel: '(00) 90000-0000',
+  rg: '00.000.000-X',
+  pis: '000.00000-00'
 };
 

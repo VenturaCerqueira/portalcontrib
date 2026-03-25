@@ -5,11 +5,13 @@ import ProgressBar from './components/ProgressBar';
 import Step1Pessoal from './components/Step1Pessoal';
 import Step2Atividade from './components/Step2Atividade';
 import Step3Trabalho from './components/Step3Trabalho';
-import { getEstadoCivilOptions, getSexoOptions } from './models/CadastroModel.js';
+import { getEstadoCivilOptions, getSexoOptions, getAtividadePretendidaOptions, getTipoLocalAtividadeOptions } from './models/CadastroModel.js';
 import { useFormController } from './controllers/FormController.js';
 
 const ESTADO_CIVIL = getEstadoCivilOptions();
 const SEXO_OPCOES = getSexoOptions();
+const ATIVIDADE_OPTIONS = getAtividadePretendidaOptions();
+const TIPO_LOCAL_OPTIONS = getTipoLocalAtividadeOptions();
 
 function App() {
   const {
@@ -34,17 +36,11 @@ function App() {
 
   // Complex next button logic extracted to controller, but review page still uses getValues
   const handleNext = async () => {
+    console.log('🔍 DEBUG handleNext - Step:', currentStep);
     setShowErrors(true);
-    const fields = currentStep === 1 ? ['cpf', 'nome', 'nit', 'sexo', 'dataNascimento', 'estadoCivil', 'cep', 'logradouro', 'endereco', 'bairro', 'telContato', 'celular'] : 
-                   currentStep === 2 ? ['atividadePretendida'] : 
-                   currentStep === 3 ? ['situacaoOcupacional'] : [];
-    const isValid = await trigger(fields);
-    if (isValid) {
-      nextStep();
-    } else {
-      const invalidFields = Object.keys(errors);
-      alert(`Por favor, corrija: ${invalidFields.join(', ')}`);
-    }
+    
+    // Delegate all validation to FormController.nextStep which now handles step/full
+    nextStep();
   };
 
   const handlePrint = () => window.print();
@@ -69,8 +65,14 @@ function App() {
                   />
                 )}
 {currentStep === 2 && (
-                <Step2Atividade register={register} errors={errors} watch={watch} />
-              )}
+                  <Step2Atividade 
+                    key={currentStep}
+                    control={control}
+                    errors={errors} 
+                    register={register}
+                    watch={watch} 
+                  />
+                )}
 {currentStep === 3 && (
                 <Step3Trabalho 
                   register={register} 
@@ -79,6 +81,26 @@ function App() {
                   getValues={getValues} 
                   setValue={setValue} 
                 />
+              )}
+              {/* Error Summary */}
+{showErrors && errors && Object.keys(errors).length > 0 && (
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-4 mb-6">
+                  <div className="flex items-start">
+                    <svg className="w-6 h-6 text-red-600 mt-0.5 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <div>
+                      <h4 className="font-semibold text-red-800 dark:text-red-200 mb-2">Campos com erro:</h4>
+                      <ul className="text-sm space-y-1">
+{Object.entries(errors || {}).map(([field, error]) => (
+                          <li key={field} className="text-red-700 dark:text-red-300 flex items-center">
+                            • <span className="ml-1 font-medium">{field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</span> {error.message}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
               )}
 {currentStep === 4 && (
                 <div className="space-y-8">
@@ -118,6 +140,26 @@ function App() {
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Sexo:</span> <span>{SEXO_OPCOES.find(s => s.value === getValues('sexo'))?.label || '---'}</span></p>
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Estado Civil:</span> <span>{ESTADO_CIVIL.find(e => e.value === getValues('estadoCivil'))?.label || '---'}</span></p>
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Data Nascimento:</span> <span>{getValues('dataNascimento') || '---'}</span></p>
+                      </div>
+                    </details>
+
+                    {/* Atividade Pretendida */}
+                    <details className="bg-purple-50 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-700 rounded-2xl p-6 group [&_summary]:cursor-pointer">
+                      <summary className="flex items-center justify-between font-semibold text-lg text-gray-900 dark:text-slate-100 mb-4 hover:bg-purple-100 dark:hover:bg-purple-900/50 rounded-xl p-3 transition-all">
+                        <span className="flex items-center">
+                          <svg className="w-6 h-6 mr-3 text-purple-600 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                          </svg>
+                          Atividade Pretendida
+                        </span>
+                        <button type="button" onClick={(e) => { e.stopPropagation(); setCurrentStep(2); }} className="text-purple-600 hover:text-purple-700 font-semibold px-4 py-2 bg-purple-100 hover:bg-purple-200 rounded-lg transition-all">Editar</button>
+                      </summary>
+                      <div className="space-y-3 text-sm">
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">Atividade:</span> <span className="ml-2">{ATIVIDADE_OPTIONS.find(a => a.value === getValues('atividadePretendida'))?.label || '---'}</span></p>
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">Tipo Local:</span> <span className="ml-2">{TIPO_LOCAL_OPTIONS.find(t => t.value === getValues('tipoLocalAtividade'))?.label || '---'}</span></p>
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">Principais Produtos:</span> <span className="ml-2">{getValues('principaisProdutos') || '---'}</span></p>
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">Local Negócio:</span> <span className="ml-2">{getValues('localNegocio') === 'fixo' ? 'Fixo' : getValues('localNegocio') === 'movel' ? 'Móvel' : '---'}</span></p>
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">Já trabalhou na Prefeitura:</span> <span className="ml-2">{getValues('jaTrabalhaPrefeituraEventos') === 'sim' ? 'Sim' : getValues('jaTrabalhaPrefeituraEventos') === 'nao' ? 'Não' : '---'}</span></p>
                       </div>
                     </details>
                   </div>
