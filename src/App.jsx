@@ -135,11 +135,21 @@ function App() {
                         </span>
                         <button type="button" onClick={(e) => { e.stopPropagation(); setCurrentStep(1); }} className="text-indigo-600 hover:text-indigo-700 font-semibold px-4 py-2 bg-indigo-100 hover:bg-indigo-200 rounded-lg transition-all">Editar</button>
                       </summary>
-                      <div className="space-y-3 text-sm">
+<div className="space-y-3 text-sm">
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Nome Completo:</span> <span className="ml-2">{getValues('nome') || '---'}</span></p>
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">CPF:</span> <span className="ml-2">{getValues('cpf') || '---'}</span></p>
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">RG:</span> <span className="ml-2">{getValues('rg') || '---'}</span></p>
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">NIT/PIS:</span> <span className="ml-2">{getValues('nit') || '---'}</span></p>
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Sexo:</span> <span>{SEXO_OPCOES.find(s => s.value === getValues('sexo'))?.label || '---'}</span></p>
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Estado Civil:</span> <span>{ESTADO_CIVIL.find(e => e.value === getValues('estadoCivil'))?.label || '---'}</span></p>
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Data Nascimento:</span> <span>{getValues('dataNascimento') || '---'}</span></p>
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">Celular:</span> <span className="ml-2">{getValues('celular') || '---'}</span></p>
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">Telefone:</span> <span className="ml-2">{getValues('telContato') || '---'}</span></p>
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">E-mail:</span> <span className="ml-2">{getValues('email') || '---'}</span></p>
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">Logradouro:</span> <span className="ml-2">{getValues('logradouro') || '---'}</span></p>
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">Endereço/Nº:</span> <span className="ml-2">{getValues('endereco') || '---'}</span></p>
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">Bairro:</span> <span className="ml-2">{getValues('bairro') || '---'}</span></p>
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">Município:</span> <span className="ml-2">{getValues('municipio') || '---'}</span></p>
                       </div>
                     </details>
 
@@ -154,42 +164,51 @@ function App() {
                         </span>
                         <button type="button" onClick={(e) => { e.stopPropagation(); setCurrentStep(2); }} className="text-purple-600 hover:text-purple-700 font-semibold px-4 py-2 bg-purple-100 hover:bg-purple-200 rounded-lg transition-all">Editar</button>
                       </summary>
-                      <div className="space-y-3 text-sm">
+<div className="space-y-3 text-sm">
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Tipo Local:</span> <span className="ml-2">{TIPO_LOCAL_OPTIONS.find(t => t.value === getValues('tipoLocalAtividade'))?.label || '---'}</span></p>
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Principais Produtos:</span> <span className="ml-2">{getValues('principaisProdutos') || '---'}</span></p>
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Local Negócio:</span> <span className="ml-2">{getValues('localNegocio') === 'fixo' ? 'Fixo' : getValues('localNegocio') === 'movel' ? 'Móvel' : '---'}</span></p>
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Já trabalhou na Prefeitura:</span> <span className="ml-2">{getValues('jaTrabalhaPrefeituraEventos') === 'sim' ? 'Sim' : getValues('jaTrabalhaPrefeituraEventos') === 'nao' ? 'Não' : '---'}</span></p>
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">Atividade Pretendida:</span> <span className="ml-2">{getValues('atividadePretendida') || '---'}</span></p>
                       </div>
                     </details>
                   </div>
 
-                  {/* Documentos */}
-                  <div className="lg:col-span-2 mt-8">
-                    <h4 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-4 flex items-center">
-                      <svg className="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                      </svg>
-                      Documentos Pendentes
-                    </h4>
-                    <div className="bg-indigo-50 dark:bg-indigo-900/30 border-2 border-dashed border-indigo-200 dark:border-indigo-700 rounded-xl p-6 text-center">
-                      <svg className="w-16 h-16 mx-auto mb-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 10.5v6m0 0l-3-3m3 3l3-3M7.5 7.5h9" />
-                      </svg>
-                      <h5 className="text-lg font-semibold text-gray-900 dark:text-slate-100 mb-2">Documentos Necessários</h5>
-                      <p className="text-gray-600 dark:text-slate-400 mb-6">
-                        Os seguintes documentos serão necessários após aprovação:
-                      </p>
-                      <ul className="text-sm text-gray-700 dark:text-slate-300 space-y-1 mb-6">
-                        <li>• RG (frente e verso)</li>
-                        <li>• CPF</li>
-                        <li>• Comprovante de residência</li>
-                        <li>• Foto 3x4</li>
-                      </ul>
-                      <p className="text-xs text-gray-500 dark:text-slate-500">
-                        * Documentos enviados separadamente após aprovação deste formulário
-                      </p>
+                  {/* Detalhes do Trabalho */}
+                  <details className="bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-700 rounded-2xl p-6 group [&_summary]:cursor-pointer">
+                    <summary className="flex items-center justify-between font-semibold text-lg text-gray-900 dark:text-slate-100 mb-4 hover:bg-emerald-100 dark:hover:bg-emerald-900/50 rounded-xl p-3 transition-all">
+                      <span className="flex items-center">
+                        <svg className="w-6 h-6 mr-3 text-emerald-600 group-open:rotate-180 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        Detalhes do Trabalho
+                      </span>
+                      <button type="button" onClick={(e) => { e.stopPropagation(); setCurrentStep(3); }} className="text-emerald-600 hover:text-emerald-700 font-semibold px-4 py-2 bg-emerald-100 hover:bg-emerald-200 rounded-lg transition-all">Editar</button>
+                    </summary>
+                    <div className="space-y-3 text-sm">
+                      <p><span className="font-medium text-gray-800 dark:text-slate-200">Situação Ocupacional:</span> <span className="ml-2">{getValues('situacaoOcupacional') === 'funcionario' ? 'Funcionário CLT' : getValues('situacaoOcupacional') === 'informal' ? 'Informal' : getValues('situacaoOcupacional') === 'mei' ? 'MEI' : '---'}</span></p>
+{getValues('situacaoOcupacional') === 'funcionario' && (
+                        <>
+                          <p><span className="font-medium text-gray-800 dark:text-slate-200">Empresa:</span> <span className="ml-2">{getValues('empresaNome') || '---'}</span></p>
+                          <p><span className="font-medium text-gray-800 dark:text-slate-200">CNPJ:</span> <span className="ml-2">{getValues('cnpjEmpresa') || '---'}</span></p>
+                          <p><span className="font-medium text-gray-800 dark:text-slate-200">Endereço Empresa:</span> <span className="ml-2">{getValues('empresaEndereco') || '---'}</span></p>
+                          <p><span className="font-medium text-gray-800 dark:text-slate-200">Telefone Empresa:</span> <span className="ml-2">{getValues('empresaTel') || '---'}</span></p>
+                        </>
+                      )}
+                      {getValues('situacaoOcupacional') === 'mei' && (
+                        <>
+                          <p><span className="font-medium text-gray-800 dark:text-slate-200">Nome Fantasia:</span> <span className="ml-2">{getValues('meiNomeFantasia') || '---'}</span></p>
+                          <p><span className="font-medium text-gray-800 dark:text-slate-200">CNPJ/MEI:</span> <span className="ml-2">{getValues('cnpjMEI') || '---'}</span></p>
+                        </>
+                      )}
+                      {getValues('situacaoOcupacional') === 'informal' && (
+                        <p><span className="font-medium text-gray-800 dark:text-slate-200">CPF Informal:</span> <span className="ml-2">{getValues('cpfInformal') || '---'}</span></p>
+                      )}
+                      <p><span className="font-medium text-gray-800 dark:text-slate-200">Salário Desejado:</span> <span className="ml-2">{getValues('salarioDesejado') || '---'}</span></p>
+                      <p><span className="font-medium text-gray-800 dark:text-slate-200">Tempo Experiência:</span> <span className="ml-2">{getValues('tempoExperiencia') || '---'}</span></p>
                     </div>
-                  </div>
+                  </details>
+
                 </div>
               )}
 

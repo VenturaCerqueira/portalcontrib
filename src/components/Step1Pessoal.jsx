@@ -249,7 +249,7 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
 <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Celular</label>
+<label className="block text-sm font-medium text-gray-700 mb-2">Celular <span className="text-red-500">*</span></label>
             <Controller
               name="celular"
               control={control}
