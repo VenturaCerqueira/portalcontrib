@@ -15,10 +15,7 @@ class ApiService {
       }
       
       return await response.json();
-    } catch (error) {
-      console.error('CPF validation error:', error);
-      throw new Error('Erro ao consultar CPF');
-    }
+    } catch (error) {      throw new Error('Erro ao consultar CPF');    }
   }
 
   static async submitCadastro(data) {
@@ -35,10 +32,7 @@ class ApiService {
       }
 
       return await response.json();
-    } catch (error) {
-      console.error('Submit error:', error);
-      throw new Error(`Erro ao enviar: ${error.message}`);
-    }
+    } catch (error) {      throw new Error(`Erro ao enviar: ${error.message}`);   }
   }
 
   static async healthCheck() {

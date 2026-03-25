@@ -36,7 +36,7 @@ function App() {
 
   // Complex next button logic extracted to controller, but review page still uses getValues
   const handleNext = async () => {
-    console.log('🔍 DEBUG handleNext - Step:', currentStep);
+
     setShowErrors(true);
     
     // Delegate all validation to FormController.nextStep which now handles step/full

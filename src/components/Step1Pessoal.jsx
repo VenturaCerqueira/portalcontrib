@@ -41,13 +41,13 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
       return;
     }
     
-    console.log('🔍 CEP MANUAL:', cleanCep);
+
     setIsLoadingCep(true);
     setCepError('');
     
     try {
       const endereco = await fetchCep(cleanCep);
-      console.log('📍 CEP MANUAL response:', endereco);
+
       setValue('logradouro', endereco.logradouro);
       setValue('bairro', endereco.bairro);
       setValue('municipio', endereco.localidade);

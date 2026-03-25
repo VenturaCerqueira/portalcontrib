@@ -93,10 +93,7 @@ const cpfRaw = req.params.cpf.replace(/\D/g, '');
       LIMIT 1
     `;
 
-console.log(`🔍 CPF Query: ${cpfRaw}, length: ${cpfRaw.length}`);
 const [rows] = await pool.execute(query, [cpfRaw]);
-console.log(`📊 Found ${rows.length} records`);
-    
     if (rows.length > 0) {
       res.json({ 
         valid: true, 
@@ -106,10 +103,7 @@ console.log(`📊 Found ${rows.length} records`);
     } else {
       res.json({ valid: false, message: 'CPF não encontrado no sistema municipal' });
     }
-  } catch (err) {
-    console.error('CPF Validation Error:', err);
-    res.status(500).json({ valid: false, error: 'Erro de servidor' });
-  }
+  } catch (err) {    res.status(500).json({ valid: false, error: 'Erro de servidor' }); }
 });
 
 // POST /api/cadastros - Save to ambulante table
@@ -178,9 +172,7 @@ app.post('/api/cadastros', async (req, res) => {
       message: `Cadastro #${result.insertId} salvo! Total: ${count}`
     });
 
-  } catch (err) {
-    console.error('DB Error:', err);
-    if (err.code === 'ER_DUP_ENTRY') {
+  } catch (err) {    if (err.code === 'ER_DUP_ENTRY') {
       res.status(409).json({ error: 'CPF já cadastrado' });
     } else {
       res.status(500).json({ error: 'Erro interno', details: err.message });

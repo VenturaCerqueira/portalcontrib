@@ -27,9 +27,9 @@ export const useCpfController = (setValue, trigger) => {
     }
 
     try {
-      console.log('🌐 Chamando API para CPF:', rawCPF);
+
       const result = await ApiService.validateCPF(rawCPF);
-      console.log('📥 Resposta completa API:', JSON.stringify(result, null, 2));
+
       
       if (result.valid && result.data) {
         const data = result.data;
@@ -62,12 +62,7 @@ export const useCpfController = (setValue, trigger) => {
         setCpfWarning('CPF válido, porém não encontrado no cadastro municipal. Preencha os dados manualmente.');
         await trigger(['nome', 'dataNascimento', 'sexo', 'estadoCivil', 'celular', 'logradouro', 'endereco', 'bairro']);
       }
-    } catch (error) {
-      console.error('❌ ERRO COMPLETO CPF:', error.message, error);
-      console.error('Stack:', error.stack);
-      setCpfValid(true);
-      // Silent on API error, keep yellow if previous warning
-    } finally {
+    } catch (error) {      setCpfValid(true);  // Silent on API error, keep yellow if previous warning\n    } finally {
       setValidatingCPF(false);
     }
   }, [setValue, trigger]);

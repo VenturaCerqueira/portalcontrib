@@ -12,10 +12,7 @@ export const decrypt = (encrypted) => {
   try {
     const bytes = CryptoJS.AES.decrypt(encrypted, SECRET_KEY);
     return JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-  } catch (e) {
-    console.error('Decrypt error:', e);
-    return null;
-  }
+  } catch (e) {    return null; }
 };
 
 export const hashPassword = async (password) => {
