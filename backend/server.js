@@ -24,12 +24,16 @@ const limiter = rateLimit({
 app.use('/api/', limiter);
 
 // MySQL Pool
+if (!process.env.DB_HOST || !process.env.DB_PORT || !process.env.DB_NAME || !process.env.DB_USER || !process.env.DB_PASS) {
+  throw new Error('Missing required DB environment variables. Check backend/.env');
+}
+
 const pool = mysql.createPool({
-  host: 'db-keepsistemas-sql8.c3emmyqhonte.sa-east-1.rds.amazonaws.com',
-  port: parseInt(process.env.DB_PORT) || 3306,
-database: process.env.DB_NAME || 'db_gestaotributaria_riachaodojacuipe',
-  user: 'anderson',
-  password: '126303@acv',
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT),
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
