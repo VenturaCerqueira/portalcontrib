@@ -33,7 +33,8 @@ const Header = () => {
           }
         }
       } catch (error) {
-        console.error('Erro ao carregar nome do contribuinte:', error)
+        console.error('Header fetchContribuinte failed:', error)
+        console.error('Full error details:', error.message)
         setFetchError(error.message)
         // Fallback remains prefeitura name
       } finally {
