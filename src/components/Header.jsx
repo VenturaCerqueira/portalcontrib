@@ -1,26 +1,14 @@
-import { useState, useEffect } from 'react'
-import { SunIcon, MoonIcon, Bars3Icon, XMarkIcon, BriefcaseIcon } from '@heroicons/react/24/outline'
+import { useState } from 'react'
+import { Bars3Icon, XMarkIcon, BriefcaseIcon } from '@heroicons/react/24/outline'
 
 const Header = () => {
-  const [darkMode, setDarkMode] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
-  useEffect(() => {
-    const isDark = localStorage.getItem('darkMode') === 'true' || (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)
-    setDarkMode(isDark)
-    document.documentElement.classList.toggle('dark', isDark)
-  }, [])
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode
-    setDarkMode(newDarkMode)
-    document.documentElement.classList.toggle('dark', newDarkMode)
-    localStorage.setItem('darkMode', newDarkMode.toString())
-  }
+
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen)
@@ -59,14 +47,6 @@ const Header = () => {
             >
               Acessar Portal
             </a>
-            <button
-              onClick={toggleDarkMode}
-              className="p-2.5 rounded-lg bg-white/20 hover:bg-white/30 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-200 border border-white/30 hover:border-white/50 flex-shrink-0"
-              title={darkMode ? 'Modo Claro' : 'Modo Escuro'}
-              aria-label={darkMode ? 'Modo Claro' : 'Modo Escuro'}
-            >
-              {darkMode ? <SunIcon className="w-5 h-5 text-white" /> : <MoonIcon className="w-5 h-5 text-white" />}
-            </button>
             <button
               onClick={toggleMobileMenu}
               className="md:hidden p-2.5 rounded-lg bg-white/20 hover:bg-white/30 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-200 border border-white/30 hover:border-white/50"
