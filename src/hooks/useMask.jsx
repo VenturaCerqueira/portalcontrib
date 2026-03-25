@@ -5,28 +5,20 @@ export const useMask = (mask, initialValue = '', onValueChange = () => {}) => {
   const valueRef = useRef(initialValue);
 
   const onChange = useCallback((e) => {
-    // Prevent recursive calls from setSelectionRange
-    if (e.nativeEvent.isComposing || e.inputType === 'insertCompositionText') {
-      return;
-    }
+    if (e.nativeEvent.isComposing || e.inputType === 'insertCompositionText') return;
+    
     const el = e.target;
-    
-    // Get precise cursor position before any state changes
     const cursorPos = el.selectionStart;
-    
     const inputValue = e.target.value;
     const rawDigits = inputValue.replace(/\D/g, '');
-    
-    // Count digits BEFORE cursor in input (stable reference)
     const digitsBeforeCursor = inputValue.slice(0, cursorPos).replace(/\D/g, '').length;
     
-    // Build new masked value
+    // Build masked - stop at mask capacity or input digits
     let masked = '';
     let digitIndex = 0;
     for (let i = 0; i < mask.length && digitIndex < rawDigits.length; i++) {
       if (/\d/.test(mask[i])) {
-        masked += rawDigits[digitIndex] || '';
-        digitIndex++;
+        masked += rawDigits[digitIndex++] || '';
       } else {
         masked += mask[i];
       }
@@ -34,13 +26,11 @@ export const useMask = (mask, initialValue = '', onValueChange = () => {}) => {
     
     valueRef.current = masked;
     setValue(masked);
+    onValueChange({ target: { name: '', value: masked } });
     
-    // Notify parent of new masked value (safe default prevents crash)
-    onValueChange(masked);
-    
-    // Position cursor at same digit count from input cursor
+    // Improved cursor: place after same # digits
     let newCursorDigits = 0;
-    let newCursorPos = 0;
+    let newCursorPos = masked.length; // default end
     for (let i = 0; i < masked.length; i++) {
       if (/\d/.test(masked[i])) {
         if (newCursorDigits === digitsBeforeCursor) {
@@ -51,24 +41,18 @@ export const useMask = (mask, initialValue = '', onValueChange = () => {}) => {
       }
     }
     
-    // Fallback to end
-    if (newCursorPos === 0) newCursorPos = masked.length;
-    
-    // Set cursor synchronously AFTER state (stable)
-    requestAnimationFrame(() => {
-      el.setSelectionRange(newCursorPos, newCursorPos);
-    });
+    requestAnimationFrame(() => el.setSelectionRange(newCursorPos, newCursorPos));
   }, [mask, onValueChange]);
 
   return [value, onChange, setValue];
 };
 
-// Masks
+// Masks for Brazilian formats
 export const masks = {
   cpf: '000.000.000-00',
   cep: '00000-000',
-  tel: '(00) 00000-0000',
-  cel: '(00) 90000-0000',
+  tel: '(00) 0000-0000',  // Fixed: 10 digits landline (area 2 + 8)
+  cel: '(00) 90000-0000', // 11 digits mobile (area 2 + 9 + 8)
   rg: '00.000.000-X',
   pis: '000.00000-00'
 };

@@ -5,7 +5,7 @@ import { cadastroSchema } from '../models/CadastroModel.js';
 import ApiService from '../models/ApiService.js';
 
 export const useFormController = () => {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep ] = useState(1);
   const [showErrors, setShowErrors] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -48,18 +48,19 @@ const form = useForm({
 
   const { register, handleSubmit, formState: { errors }, control, reset, trigger, watch, getValues, setValue } = form;
 
-const nextStep = async () => {   setShowErrors(true);
+const nextStep = async () => {   
+  setShowErrors(true);
     
-    const values = getValues();
+  const values = getValues();
     
-    // Step-specific fields - Added cpf for step 1
-    const stepFields = currentStep === 1 ? ['cpf','nome','sexo','dataNascimento','estadoCivil','celular','cep','logradouro','endereco','bairro','uf','municipio'] : currentStep === 2 ? ['tipoLocalAtividade', 'principaisProdutos', 'localNegocio', 'jaTrabalhaPrefeituraEventos'] : ['situacaoOcupacional'];
-    const stepValid = await trigger(stepFields);
+  // Step-specific fields - Added cpf and telContato for step 1
+  const stepFields = currentStep === 1 ? ['cpf','nome','sexo','dataNascimento','estadoCivil','celular','telContato','cep','logradouro','endereco','bairro','uf','municipio'] : currentStep === 2 ? ['tipoLocalAtividade', 'principaisProdutos', 'localNegocio', 'jaTrabalhaPrefeituraEventos'] : ['situacaoOcupacional'];
+  const stepValid = await trigger(stepFields);
     
-    if (stepValid && currentStep < 4) {
-      setCurrentStep(currentStep + 1);
-    } else {
-    }  };
+  if (stepValid && currentStep < 4) {
+    setCurrentStep(currentStep + 1);
+  } 
+};
 
   const prevStep = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
@@ -75,7 +76,7 @@ const nextStep = async () => {   setShowErrors(true);
       reset();
       setCurrentStep(1);
     } catch (error) {
-      alert(`❌ Erro: ${error.message}\n(Backend/DB OK?)`);
+      alert(`❌ Erro: ${error.message}\\n(Backend/DB OK?)`);
     } finally {
       setIsSubmitting(false);
     }
@@ -93,4 +94,3 @@ const nextStep = async () => {   setShowErrors(true);
     ...form
   };
 };
-

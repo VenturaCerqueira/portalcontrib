@@ -83,7 +83,7 @@ export const cadastroSchema = z.object({
   endereco: z.string().min(1, 'Endereço/ Número obrigatório'),
   bairro: z.string().min(1, 'Bairro obrigatório'),
   cep: z.string().min(5, 'CEP obrigatório'),
-  telContato: z.string().optional(),
+  telContato: z.string().min(1, 'Telefone obrigatório').regex(/^\\(\\d{2}\\) ?9?\\d{4,5}-\\d{4}$/, 'Telefone inválido (00) 00000-0000'),
   celular: z.string().min(1, 'Celular obrigatório'),
   email: z.string().email('E-mail inválido').optional().or(z.literal('')),
   atividadePretendida: z.string().optional(),

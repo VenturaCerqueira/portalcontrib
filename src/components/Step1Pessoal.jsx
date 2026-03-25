@@ -201,10 +201,10 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
               <select
                 {...register('estadoCivil')}
                 className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
-                  errors?.estadoCivil 
-                    ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
-                    : 'border-gray-300 hover:border-gray-400'
-                }`}
+                errors?.estadoCivil 
+                  ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
+                  : 'border-gray-300 hover:border-gray-400'
+              }`}
               >
                 <option value="">Selecione...</option>
                 {ESTADO_CIVIL.map((op) => (
@@ -240,7 +240,7 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
                       error ? 'border-red-500 ring-red-200' : 'border-gray-300'
                     }`}
                     placeholder="exemplo@dominio.com"
-                  />
+                    />
                   {error && <p className="mt-1 text-sm text-red-600">{error.message}</p>}
                 </div>
               )}
@@ -248,39 +248,21 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Celular <span className="text-red-500">*</span></label>
+<div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Telefone Celular</label>
             <Controller
               name="celular"
               control={control}
-              rules={{
-                required: 'Celular obrigatório',
-                minLength: { value: 15, message: 'Celular deve ter formato completo' },
-                pattern: {
-                  value: /^(\d{2}) 9\d{4}-\d{4}$/,
-                  message: 'Formato: (00) 90000-0000'
-                }
-              }}
               render={({ field, fieldState: { error } }) => (
                 <div className="space-y-1">
                   <div className="relative">
                     <MaskedField
                       mask={masks.cel}
                       field={field}
-                      className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
-                        error 
-                          ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
-                          : 'border-gray-300 hover:border-gray-400'
-                      }`}
+                      className="w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 border-gray-300 hover:border-gray-400"
                       placeholder="(00) 90000-0000"
                     />
-                    {error && (
-                      <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
-                      </svg>
-                    )}
                   </div>
-                  {error && <p className="mt-1 text-sm text-red-600">{error.message}</p>}
                 </div>
               )}
             />
@@ -290,33 +272,16 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
             <Controller
               name="telContato"
               control={control}
-              rules={{
-                minLength: { value: 14, message: 'Telefone deve ter formato completo' },
-                pattern: {
-                  value: /^(\d{2}) (9\d{4}-\d{4}|\d{4,5}-\d{4})$/,
-                  message: 'Formato: (00) 90000-0000 ou (00) 0000-0000'
-                }
-              }}
-              render={({ field, fieldState: { error } }) => (
+              render={({ field }) => (
                 <div className="space-y-1">
                   <div className="relative">
                     <MaskedField
                       mask={masks.tel}
                       field={field}
-                      className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
-                        error 
-                          ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
-                          : 'border-gray-300 hover:border-gray-400'
-                      }`}
-                      placeholder="(00) 00000-0000"
+                      className="w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 border-gray-300 hover:border-gray-400"
+                      placeholder="(00) 0000-0000"
                     />
-                    {error && (
-                      <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
-                      </svg>
-                    )}
                   </div>
-                  {error && <p className="mt-1 text-sm text-red-600">{error.message}</p>}
                 </div>
               )}
             />
