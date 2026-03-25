@@ -27,8 +27,8 @@ const Step3Trabalho = ({ register, control, errors, watch, getValues, setValue }
 
       <div className="lg:col-span-3">
         <label className="block text-sm font-semibold text-gray-700 mb-3">Situação Ocupacional Atual *</label>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <label className="flex items-center p-4 border-2 border-gray-200 dark:border-slate-700 rounded-xl hover:border-teal-300 dark:hover:border-teal-500 hover:shadow-md dark:hover:shadow-teal-500/20 transition-all cursor-pointer group bg-white dark:bg-slate-800/50">
+        <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 ${errors?.situacaoOcupacional ? 'ring-2 ring-red-200/50 bg-red-50/50 rounded-xl p-4' : ''}`}>
+          <label className={`flex items-center p-4 border-2 rounded-xl hover:shadow-md transition-all cursor-pointer group bg-white dark:bg-slate-800/50 ${errors?.situacaoOcupacional ? 'border-red-400 bg-red-50/50 dark:bg-red-900/20' : 'border-gray-200 dark:border-slate-700 hover:border-teal-300 dark:hover:border-teal-500 hover:shadow-md dark:hover:shadow-teal-500/20'}`}>
             <input 
               type="radio" 
               value="funcionario" 
@@ -38,7 +38,7 @@ const Step3Trabalho = ({ register, control, errors, watch, getValues, setValue }
             />
             <span className="font-medium text-gray-900 dark:text-slate-100 group-hover:text-teal-600 dark:group-hover:text-teal-400">Funcionário(a) de Empresa</span>
           </label>
-          <label className="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-teal-300 hover:shadow-md transition-all cursor-pointer group">
+          <label className={`flex items-center p-4 border-2 rounded-xl hover:shadow-md transition-all cursor-pointer group ${errors?.situacaoOcupacional ? 'border-red-400 bg-red-50/50 dark:bg-red-900/20' : 'border-gray-200 hover:border-teal-300 hover:shadow-md'}`}>
               <input 
               type="radio" 
               value="informal" 
@@ -48,7 +48,7 @@ const Step3Trabalho = ({ register, control, errors, watch, getValues, setValue }
             />
             <span className="font-medium text-gray-900 group-hover:text-teal-600">Trabalhador Informal</span>
           </label>
-          <label className="flex items-center p-4 border-2 border-gray-200 rounded-xl hover:border-teal-300 hover:shadow-md transition-all cursor-pointer group">
+          <label className={`flex items-center p-4 border-2 rounded-xl hover:shadow-md transition-all cursor-pointer group ${errors?.situacaoOcupacional ? 'border-red-400 bg-red-50/50 dark:bg-red-900/20' : 'border-gray-200 hover:border-teal-300 hover:shadow-md'}`}>
               <input 
               type="radio" 
               value="mei" 
@@ -59,7 +59,14 @@ const Step3Trabalho = ({ register, control, errors, watch, getValues, setValue }
             <span className="font-medium text-gray-900 group-hover:text-teal-600">MEI</span>
           </label>
         </div>
-{errors?.situacaoOcupacional && <label className="text-red-500 text-xs mt-2 block font-medium animate-pulse">* {errors.situacaoOcupacional.message}</label>}
+        {errors?.situacaoOcupacional && (
+          <div className="flex items-center mt-2 text-red-500 text-xs font-medium animate-pulse">
+            <svg className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+            </svg>
+            * {errors.situacaoOcupacional.message}
+          </div>
+        )}
       </div>
 
       {/* Funcionário de Empresa */}
@@ -68,20 +75,42 @@ const Step3Trabalho = ({ register, control, errors, watch, getValues, setValue }
           <h4 className="lg:col-span-3 text-lg font-semibold text-gray-800 mb-4">Dados da Empresa</h4>
           <div className="lg:col-span-1">
             <label className="block text-sm font-semibold text-gray-700 mb-2">Nome da Empresa *</label>
-            <input 
-              autoComplete="off"
-              {...register('empresaNome')} 
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-              placeholder="Nome da empresa empregadora"
-            />
+            <div className="relative">
+              <input 
+                autoComplete="off"
+                {...register('empresaNome')} 
+                className={`w-full px-4 py-3 pr-10 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${
+                  errors?.empresaNome 
+                    ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
+                    : 'border-gray-300 hover:border-gray-400'
+                }`}
+                placeholder="Nome da empresa empregadora"
+              />
+              {errors?.empresaNome && (
+                <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                </svg>
+              )}
+            </div>
           </div>
           <div className="lg:col-span-1">
             <label className="block text-sm font-semibold text-gray-700 mb-2">CNPJ da Empresa *</label>
-            <input 
-              {...register('cnpjEmpresa')} 
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-              placeholder="00.000.000/0000-00"
-            />
+            <div className="relative">
+              <input 
+                {...register('cnpjEmpresa')} 
+                className={`w-full px-4 py-3 pr-10 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${
+                  errors?.cnpjEmpresa 
+                    ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
+                    : 'border-gray-300 hover:border-gray-400'
+                }`}
+                placeholder="00.000.000/0000-00"
+              />
+              {errors?.cnpjEmpresa && (
+                <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                </svg>
+              )}
+            </div>
           </div>
           <div className="lg:col-span-1">
             <label className="block text-sm font-semibold text-gray-700 mb-2">Endereço da Empresa</label>
@@ -148,19 +177,41 @@ const Step3Trabalho = ({ register, control, errors, watch, getValues, setValue }
           <h4 className="lg:col-span-3 text-lg font-semibold text-gray-800 mb-4">Dados do MEI</h4>
           <div className="lg:col-span-1">
             <label className="block text-sm font-semibold text-gray-700 mb-2">CNPJ / MEI *</label>
-            <input 
-              {...register('cnpjMEI')} 
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-              placeholder="00.000.000/0000-00"
-            />
+            <div className="relative">
+              <input 
+                {...register('cnpjMEI')} 
+                className={`w-full px-4 py-3 pr-10 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${
+                  errors?.cnpjMEI 
+                    ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
+                    : 'border-gray-300 hover:border-gray-400'
+                }`}
+                placeholder="00.000.000/0000-00"
+              />
+              {errors?.cnpjMEI && (
+                <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                </svg>
+              )}
+            </div>
           </div>
           <div className="lg:col-span-2">
             <label className="block text-sm font-semibold text-gray-700 mb-2">Nome Fantasia *</label>
-            <input 
-              {...register('meiNomeFantasia')} 
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-              placeholder="Nome do seu negócio MEI"
-            />
+            <div className="relative">
+              <input 
+                {...register('meiNomeFantasia')} 
+                className={`w-full px-4 py-3 pr-10 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${
+                  errors?.meiNomeFantasia 
+                    ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
+                    : 'border-gray-300 hover:border-gray-400'
+                }`}
+                placeholder="Nome do seu negócio MEI"
+              />
+              {errors?.meiNomeFantasia && (
+                <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                </svg>
+              )}
+            </div>
           </div>
         </>
       )}

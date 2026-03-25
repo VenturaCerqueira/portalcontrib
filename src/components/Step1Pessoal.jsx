@@ -112,13 +112,22 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Nome Completo *</label>
-            <input
-              {...register('nome')}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                errors?.nome ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Digite o nome completo"
-            />
+            <div className="relative">
+              <input
+                {...register('nome')}
+                className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                  errors?.nome 
+                    ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
+                    : 'border-gray-300 hover:border-gray-400'
+                }`}
+                placeholder="Digite o nome completo"
+              />
+              {errors?.nome && (
+                <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                </svg>
+              )}
+            </div>
             {errors?.nome?.message && <p className="mt-1 text-sm text-red-600">{errors?.nome?.message}</p>}
           </div>
         </div>
@@ -126,23 +135,49 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Data de Nascimento *</label>
-            <input
-              type="date"
-              {...register('dataNascimento')}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                errors?.dataNascimento ? 'border-red-500' : 'border-gray-300'
-              }`}
-              max="2005-12-31"
+            <Controller
+              name="dataNascimento"
+              control={control}
+              rules={{
+                required: 'Data de nascimento obrigatória'
+              }}
+              render={({ field, fieldState: { error } }) => (
+                <div className="space-y-1">
+                  <div className="relative">
+                    <input
+                      type="date"
+                      {...field}
+                      className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                        error 
+                          ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                      max={(() => {
+                        const today = new Date();
+                        today.setHours(23, 59, 59, 999);
+                        return today.toISOString().split('T')[0];
+                      })()}
+                    />
+                    {error && (
+                      <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                      </svg>
+                    )}
+                  </div>
+                  {error?.message && <p className="mt-1 text-sm text-red-600">{error.message}</p>}
+                </div>
+              )}
             />
-            {errors?.dataNascimento?.message && <p className="mt-1 text-sm text-red-600">{errors?.dataNascimento?.message}</p>}
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Sexo *</label>
             <select
               {...register('sexo')}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                errors?.sexo ? 'border-red-500' : 'border-gray-300'
+              className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                errors?.sexo 
+                  ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
+                  : 'border-gray-300 hover:border-gray-400'
               }`}
             >
               <option value="">Selecione...</option>
@@ -150,6 +185,11 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
                 <option key={op.value} value={op.value}>{op.label}</option>
               ))}
             </select>
+            {errors?.sexo && (
+              <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+              </svg>
+            )}
             {errors?.sexo?.message && <p className="mt-1 text-sm text-red-600">{errors?.sexo?.message}</p>}
           </div>
         </div>
@@ -157,17 +197,26 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Estado Civil <span className="text-red-500">*</span></label>
-            <select
-              {...register('estadoCivil')}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                errors?.estadoCivil ? 'border-red-500' : 'border-gray-300'
-              }`}
-            >
-              <option value="">Selecione...</option>
-              {ESTADO_CIVIL.map((op) => (
-                <option key={op.value} value={op.value}>{op.label}</option>
-              ))}
-            </select>
+            <div className="relative">
+              <select
+                {...register('estadoCivil')}
+                className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                  errors?.estadoCivil 
+                    ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
+                    : 'border-gray-300 hover:border-gray-400'
+                }`}
+              >
+                <option value="">Selecione...</option>
+                {ESTADO_CIVIL.map((op) => (
+                  <option key={op.value} value={op.value}>{op.label}</option>
+                ))}
+              </select>
+              {errors?.estadoCivil && (
+                <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                </svg>
+              )}
+            </div>
             {errors?.estadoCivil?.message && <p className="mt-1 text-sm text-red-600">{errors?.estadoCivil?.message}</p>}
           </div>
           <div>
@@ -214,14 +263,23 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
               }}
               render={({ field, fieldState: { error } }) => (
                 <div className="space-y-1">
-                  <MaskedField
-                    mask={masks.cel}
-                    field={field}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all pr-10 ${
-                      error ? 'border-red-500 ring-red-200' : 'border-gray-300 hover:border-gray-400'
-                    }`}
-                    placeholder="(00) 90000-0000"
-                  />
+                  <div className="relative">
+                    <MaskedField
+                      mask={masks.cel}
+                      field={field}
+                      className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                        error 
+                          ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                      placeholder="(00) 90000-0000"
+                    />
+                    {error && (
+                      <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                      </svg>
+                    )}
+                  </div>
                   {error && <p className="mt-1 text-sm text-red-600">{error.message}</p>}
                 </div>
               )}
@@ -241,14 +299,23 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
               }}
               render={({ field, fieldState: { error } }) => (
                 <div className="space-y-1">
-                  <MaskedField
-                    mask={masks.tel}
-                    field={field}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all pr-10 ${
-                      error ? 'border-red-500 ring-red-200' : 'border-gray-300 hover:border-gray-400'
-                    }`}
-                    placeholder="(00) 00000-0000"
-                  />
+                  <div className="relative">
+                    <MaskedField
+                      mask={masks.tel}
+                      field={field}
+                      className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                        error 
+                          ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                      placeholder="(00) 00000-0000"
+                    />
+                    {error && (
+                      <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                      </svg>
+                    )}
+                  </div>
                   {error && <p className="mt-1 text-sm text-red-600">{error.message}</p>}
                 </div>
               )}
@@ -270,14 +337,23 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
               }}
               render={({ field, fieldState: { error } }) => (
                 <div className="space-y-1">
-                  <MaskedField
-                    mask={masks.rg}
-                    field={field}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all pr-10 ${
-                      error ? 'border-red-500 ring-red-200' : 'border-gray-300 hover:border-gray-400'
-                    }`}
-                    placeholder="00.000.000-X"
-                  />
+                  <div className="relative">
+                    <MaskedField
+                      mask={masks.rg}
+                      field={field}
+                      className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                        error 
+                          ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                      placeholder="00.000.000-X"
+                    />
+                    {error && (
+                      <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                      </svg>
+                    )}
+                  </div>
                   {error && <p className="mt-1 text-sm text-red-600">{error.message}</p>}
                 </div>
               )}
@@ -297,14 +373,23 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
               }}
               render={({ field, fieldState: { error } }) => (
                 <div className="space-y-1">
-                  <MaskedField
-                    mask={masks.pis}
-                    field={field}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all pr-10 ${
-                      error ? 'border-red-500 ring-red-200' : 'border-gray-300 hover:border-gray-400'
-                    }`}
-                    placeholder="000.00000-00"
-                  />
+                  <div className="relative">
+                    <MaskedField
+                      mask={masks.pis}
+                      field={field}
+                      className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                        error 
+                          ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
+                          : 'border-gray-300 hover:border-gray-400'
+                      }`}
+                      placeholder="000.00000-00"
+                    />
+                    {error && (
+                      <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                      </svg>
+                    )}
+                  </div>
                   {error && <p className="mt-1 text-sm text-red-600">{error.message}</p>}
                 </div>
               )}
@@ -370,13 +455,22 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Logradouro *</label>
-            <input
-              {...register('logradouro')}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors ${
-                errors?.logradouro ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Rua, Avenida, etc."
-            />
+            <div className="relative">
+              <input
+                {...register('logradouro')}
+                className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 ${
+                  errors?.logradouro 
+                    ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
+                    : 'border-gray-300 hover:border-gray-400'
+                }`}
+                placeholder="Rua, Avenida, etc."
+              />
+              {errors?.logradouro && (
+                <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                </svg>
+              )}
+            </div>
             {errors?.logradouro?.message && <p className="mt-1 text-sm text-red-600">{errors?.logradouro?.message}</p>}
           </div>
 

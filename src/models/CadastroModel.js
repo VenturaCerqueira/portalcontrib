@@ -45,7 +45,38 @@ export const cadastroSchema = z.object({
     .refine(isValidCPF, { message: 'CPF inválido (verifique os números)' }),
   rg: z.string().optional(),
   nit: z.string().optional(),
-  dataNascimento: z.string().refine(val => val && new Date(val) <= new Date('2005-12-31'), { message: 'Data Nascimento obrigatória (máx 2005)' }),
+  dataNascimento: z.string()
+    .min(1, 'Data de nascimento obrigatória')
+    .refine((val) => {
+      if (!val) return false;
+      const birthDate = new Date(val + 'T00:00:00');
+      if (isNaN(birthDate.getTime())) return false;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      birthDate.setHours(0, 0, 0, 0);
+      return birthDate <= today;
+    }, { message: 'Data de nascimento inválida' })
+    .refine((val) => {
+      if (!val) return false;
+      const birthDate = new Date(val + 'T00:00:00');
+      if (isNaN(birthDate.getTime())) return false;
+      const today = new Date();
+      today.setFullYear(today.getFullYear() - 18);
+      birthDate.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+      return birthDate <= today;
+    }, { message: 'Pessoa não pode ser menor que 18 anos' })
+    .refine((val) => {
+      if (!val) return true;
+      const birthDate = new Date(val + 'T00:00:00');
+      if (isNaN(birthDate.getTime())) return false;
+      const today = new Date();
+      const minBirthDate = new Date(today);
+      minBirthDate.setFullYear(today.getFullYear() - 100);
+      minBirthDate.setHours(0, 0, 0, 0);
+      birthDate.setHours(0, 0, 0, 0);
+      return birthDate >= minBirthDate;
+    }, { message: 'Pessoa não pode ser maior que 100 anos' }),
   estadoCivil: z.enum(['1','2','3','4','5','6','7','8'], { errorMap }).refine(val => val && val.length > 0, 'Estado civil é obrigatório'),
   municipio: z.string().optional(),
   logradouro: z.string().min(1, 'Logradouro obrigatório'),

@@ -27,10 +27,8 @@ export const useCpfController = (setValue, trigger) => {
     }
 
     try {
-
       const result = await ApiService.validateCPF(rawCPF);
 
-      
       if (result.valid && result.data) {
         const data = result.data;
         setCpfValid(true);
@@ -45,7 +43,7 @@ export const useCpfController = (setValue, trigger) => {
         if (data.celular_wpp) setValue('celular', data.celular_wpp);
         if (data.telefone || data.contato) setValue('telContato', data.telefone || data.contato || '');
 
-// Auto-fill ENDEREÇO RESIDENCIAL ✅ ATIVADO
+        // Auto-fill ENDEREÇO RESIDENCIAL ✅ ATIVADO
         setValue('cep', data.cep || '');
         setValue('logradouro', data.logradouro || data.endereco || '');
 
@@ -56,13 +54,16 @@ export const useCpfController = (setValue, trigger) => {
         await trigger(['nome', 'dataNascimento', 'sexo', 'estadoCivil', 'celular', 'cep', 'logradouro', 'endereco', 'bairro', 'municipio', 'uf']);
         setCpfError('');
         setCpfSuccessMsg('✅ Dados carregados com sucesso do cadastro municipal!');
+        setValidatingCPF(false);
       } else {
         setCpfValid(true);
         setCpfData({ nome: '', dataNascimento: '' });
         setCpfWarning('CPF válido, porém não encontrado no cadastro municipal. Preencha os dados manualmente.');
+        setValidatingCPF(false);
         await trigger(['nome', 'dataNascimento', 'sexo', 'estadoCivil', 'celular', 'logradouro', 'endereco', 'bairro']);
       }
-    } catch (error) {      setCpfValid(true);  // Silent on API error, keep yellow if previous warning\n    } finally {
+    } catch (error) {
+      setCpfValid(true);  // Silent on API error, keep yellow if previous warning
       setValidatingCPF(false);
     }
   }, [setValue, trigger]);
