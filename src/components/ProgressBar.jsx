@@ -3,7 +3,7 @@ import React from 'react';
 const ProgressBar = ({ currentStep, totalSteps = 4 }) => {
   const steps = Array.from({ length: totalSteps }, (_, i) => ({
     number: i + 1,
-    label: ['Pessoal', 'Trabalho Atual', 'Atividade Pretendida', 'Revisão'][i],
+    label: ['Pessoal', 'Atividade Pretendida', 'Trabalho Atual', 'Revisão'][i],
     active: currentStep === i + 1,
     completed: currentStep > i + 1
   }));
