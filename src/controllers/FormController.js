@@ -42,7 +42,9 @@ const form = useForm({
       empresaTel: '',
       cpfInformal: '',
       cnpjMEI: '',
-      meiNomeFantasia: ''
+      meiNomeFantasia: '',
+      fotoDocumento: undefined
+
     }
   });
 
@@ -54,7 +56,7 @@ const nextStep = async () => {
   const values = getValues();
     
   // Step-specific fields - Added cpf and telContato for step 1
-  const stepFields = currentStep === 1 ? ['cpf','nome','sexo','dataNascimento','estadoCivil','celular','telContato','cep','logradouro','endereco','bairro','uf','municipio'] : currentStep === 2 ? ['tipoLocalAtividade', 'principaisProdutos', 'localNegocio', 'jaTrabalhaPrefeituraEventos'] : ['situacaoOcupacional'];
+  const stepFields = currentStep === 1 ? ['cpf','nome','sexo','dataNascimento','estadoCivil','celular','telContato','cep','logradouro','endereco','bairro','uf','municipio','fotoDocumento'] : currentStep === 2 ? ['tipoLocalAtividade', 'principaisProdutos', 'localNegocio', 'jaTrabalhaPrefeituraEventos'] : ['situacaoOcupacional'];
   const stepValid = await trigger(stepFields);
     
   if (stepValid && currentStep < 4) {

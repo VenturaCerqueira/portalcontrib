@@ -150,6 +150,16 @@ function App() {
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Endereço/Nº:</span> <span className="ml-2">{getValues('endereco') || '---'}</span></p>
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Bairro:</span> <span className="ml-2">{getValues('bairro') || '---'}</span></p>
                         <p><span className="font-medium text-gray-800 dark:text-slate-200">Município:</span> <span className="ml-2">{getValues('municipio') || '---'}</span></p>
+                        {getValues('fotoDocumento') && (
+                          <div className="mt-3 p-2 bg-blue-50 rounded-lg border border-blue-200">
+                            <p className="font-medium text-gray-800 dark:text-slate-200 mb-1">Foto Documento:</p>
+                            <img 
+                              src={URL.createObjectURL(getValues('fotoDocumento'))} 
+                              alt="Documento" 
+                              className="w-24 h-24 object-cover rounded-md shadow-sm" 
+                            />
+                          </div>
+                        )}
                       </div>
                     </details>
 

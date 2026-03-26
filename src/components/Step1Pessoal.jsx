@@ -304,6 +304,48 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
             />
           </div>        
         </div>
+
+        {/* Documento com Foto */}
+        <div className="grid grid-cols-1 gap-6 mt-6">
+          <div className="md:col-span-1">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Documento com Foto <span className="text-red-500">*</span>
+            </label>
+            <Controller
+              name="fotoDocumento"
+              control={control}
+              rules={{ required: 'Documento com foto obrigatório' }}
+              render={({ field, fieldState: { error } }) => {
+                const file = field.value;
+                const preview = file ? URL.createObjectURL(file) : null;
+
+                return (
+                  <div className={`relative group ${error ? 'ring-2 ring-red-200' : ''}`}>
+                    <input
+                      type="file"
+                      accept="image/*,.pdf"
+                      onChange={(e) => {
+                        const selectedFile = e.target.files?.[0];
+                        if (selectedFile) {
+                          field.onChange(selectedFile);
+                        }
+                      }}
+                      className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border-gray-300 hover:border-gray-400"
+                    />
+                    {preview && (
+                      <div className="mt-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                        <img src={preview} alt="Preview" className="max-w-full max-h-48 object-contain rounded-lg shadow-md mx-auto" />
+                        <p className="text-xs text-gray-500 mt-2 text-center truncate">{file.name}</p>
+                      </div>
+                    )}
+                    {error && <p className="mt-2 text-sm text-red-600">{error.message}</p>}
+                  </div>
+                );
+              }}
+            />
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">RG</label>

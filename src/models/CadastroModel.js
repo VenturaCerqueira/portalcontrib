@@ -14,7 +14,8 @@ const ESTADO_CIVIL = [
 
 const SEXO_OPCOES = [
   { value: 'M', label: 'Masculino' },
-  { value: 'F', label: 'Feminino' }
+  { value: 'F', label: 'Feminino' },
+  { value: 'O', label: 'Outro' }
 ];
 
 const TIPO_LOCAL_ATIVIDADE_OPTIONS = [
@@ -37,7 +38,7 @@ const errorMap = (issue, ctx) => ({
 
 export const cadastroSchema = z.object({
   nome: z.string().min(1, 'Nome completo obrigatório'),
-  sexo: z.enum(['M', 'F'], { errorMap }).refine(val => val && val.length > 0, 'Sexo é obrigatório'),
+  sexo: z.enum(['M', 'F', 'O'], { errorMap }).refine(val => val && val.length > 0, 'Sexo é obrigatório'),
   cpf: z.string()
     .min(1, 'CPF é obrigatório')
     .transform(val => val.replace(/\D/g, ''))
@@ -100,7 +101,11 @@ celular: z.string().min(1, 'Celular obrigatório').regex(/^\(\d{2}\) ?9\d{4}-\d{
   empresaTel: z.string().optional(),
   cpfInformal: z.string().optional(),
   cnpjMEI: z.string().optional(),
-  meiNomeFantasia: z.string().optional()
+meiNomeFantasia: z.string().optional(),
+  fotoDocumento: z.instanceof(File, { message: 'Documento com foto obrigatório' })
+    .refine((file) => file.size <= 5 * 1024 * 1024, { message: 'Arquivo muito grande. Máximo 5MB' })
+    .refine((file) => /\.(jpe?g|png|gif|pdf)$/i.test(file.name), { message: 'Apenas JPG, PNG, GIF ou PDF' })
+
 }, { errorMap }).superRefine((data, ctx) => {
   if (data.situacaoOcupacional === 'funcionario') {
     if (!data.empresaNome) ctx.addIssue({ code: 'custom', message: 'Nome da empresa obrigatório', path: ['empresaNome'] });
