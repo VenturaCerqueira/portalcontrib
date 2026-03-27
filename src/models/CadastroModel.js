@@ -84,7 +84,9 @@ export const cadastroSchema = z.object({
   endereco: z.string().min(1, 'Endereço/ Número obrigatório'),
   bairro: z.string().min(1, 'Bairro obrigatório'),
   cep: z.string().min(5, 'CEP obrigatório'),
-telContato: z.string().optional().regex(/^\(\d{2}\) ?\d{4,5}-\d{4}$/, 'Telefone inválido - use (00) 0000-0000 ou (00) 90000-0000'),
+telContato: z.string().optional().refine(val => !val || /^\(\d{2}\) ?\d{4,5}-\d{4}$/.test(val), {
+  message: 'Telefone inválido - use (00) 0000-0000 ou (00) 90000-0000'
+}),
 celular: z.string().min(1, 'Celular obrigatório').regex(/^\(\d{2}\) ?9\d{4}-\d{4}$/, 'Celular inválido - use (00) 90000-0000'),
   email: z.string().email('E-mail inválido').optional().or(z.literal('')),
   atividadePretendida: z.string().optional(),
