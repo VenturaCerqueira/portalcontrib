@@ -3,7 +3,7 @@ const BACKEND_URL = import.meta.env.VITE_API_URL || (typeof window !== 'undefine
 class ApiService {
   static async validateCPF(rawCPF) {
     try {
-      const response = await fetch(`${BACKEND_URL}/api/validate-cpf/${rawCPF}`);
+      const response = await fetch(`${BACKEND_URL}validate-cpf/${rawCPF}`);
       
       if (!response.ok) {
         // Handle rate limit (429) and other errors gracefully
@@ -20,7 +20,7 @@ class ApiService {
 
   static async submitCadastro(data) {
     try {
-      const response = await fetch(`${BACKEND_URL}/api/cadastros`, {
+      const response = await fetch(`${BACKEND_URL}cadastros`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
@@ -68,7 +68,7 @@ class ApiService {
 
   static async healthCheck() {
     try {
-      const response = await fetch(`${BACKEND_URL}/api/health`);
+      const response = await fetch(`${BACKEND_URL}health`);
       return response.ok;
     } catch {
       return false;
