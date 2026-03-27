@@ -180,14 +180,136 @@ function App() {
                     </button>
                   </div>
 
-                  {/* Review content - UNCHANGED - abbreviated */}
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    {/* Dados Pessoais, Atividade, Trabalho details here - same as before */}
-                    <details className="bg-gray-50 dark:bg-slate-800/50 border border-gray-200 dark:border-slate-700 rounded-2xl p-6">
-                      <summary className="font-semibold text-lg mb-4">Dados Pessoais</summary>
-                      Dados resumidos...
-                    </details>
-                    {/* Other details... */}
+{/* ✅ DYNAMIC REVIEW SECTIONS */}
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      {/* 1. DADOS PESSOAIS */}
+                      <section className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-6 shadow-md">
+                        <div className="flex items-center justify-between mb-4">
+                          <h4 className="text-lg font-bold text-blue-900 dark:text-blue-100 flex items-center">
+                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                            </svg>
+                            Dados Pessoais
+                          </h4>
+                          <button type="button" onClick={() => setCurrentStep(1)} className="text-blue-600 hover:text-blue-800 font-medium text-sm px-3 py-1 bg-blue-100 hover:bg-blue-200 rounded-lg transition-all">
+                            Editar
+                          </button>
+                        </div>
+                        <dl className="grid grid-cols-1 gap-3 text-sm">
+                          <div className="flex justify-between"><span>Nome:</span><span className="font-semibold">{getValues('nome') || '—'}</span></div>
+                          <div className="flex justify-between"><span>CPF:</span><span className="font-semibold">{getValues('cpf') || '—'}</span></div>
+                          <div className="flex justify-between"><span>Sexo:</span><span>{SEXO_OPCOES.find(o => o.value === getValues('sexo'))?.label || '—'}</span></div>
+                          <div className="flex justify-between"><span>Data Nasc:</span><span>{getValues('dataNascimento') ? new Date(getValues('dataNascimento')).toLocaleDateString('pt-BR') : '—'}</span></div>
+                          <div className="flex justify-between"><span>Estado Civil:</span><span>{ESTADO_CIVIL.find(o => o.value === getValues('estadoCivil'))?.label || '—'}</span></div>
+                          <div className="flex justify-between"><span>Celular:</span><span className="font-semibold">{getValues('celular') || '—'}</span></div>
+                        </dl>
+                      </section>
+
+                      {/* 2. ENDEREÇO */}
+                      <section className="bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-6 shadow-md">
+                        <div className="flex items-center justify-between mb-4">
+                          <h4 className="text-lg font-bold text-emerald-900 dark:text-emerald-100 flex items-center">
+                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            Endereço Residencial
+                          </h4>
+                          <button type="button" onClick={() => setCurrentStep(1)} className="text-emerald-600 hover:text-emerald-800 font-medium text-sm px-3 py-1 bg-emerald-100 hover:bg-emerald-200 rounded-lg transition-all">
+                            Editar
+                          </button>
+                        </div>
+                        <dl className="grid grid-cols-1 gap-3 text-sm">
+                          <div className="flex justify-between"><span>CEP:</span><span>{getValues('cep') || '—'}</span></div>
+                          <div className="flex justify-between"><span>Logradouro:</span><span>{getValues('logradouro') || '—'}</span></div>
+                          <div className="flex justify-between"><span>Nº/Apto:</span><span>{getValues('endereco') || '—'}</span></div>
+                          <div className="flex justify-between"><span>Bairro:</span><span className="font-semibold">{getValues('bairro') || '—'}</span></div>
+                          <div className="flex justify-between"><span>Município/UF:</span><span>{getValues('municipio')}, {getValues('uf') || '—'}</span></div>
+                        </dl>
+                      </section>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                      {/* 3. ATIVIDADE */}
+                      <section className="bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 border border-purple-200 dark:border-purple-800 rounded-2xl p-6 shadow-md">
+                        <div className="flex items-center justify-between mb-4">
+                          <h4 className="text-lg font-bold text-purple-900 dark:text-purple-100 flex items-center">
+                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2H4a2 2 0 00-2 2v2m4 6h.01" />
+                            </svg>
+                            Atividade Pretendida
+                          </h4>
+                          <button type="button" onClick={() => setCurrentStep(2)} className="text-purple-600 hover:text-purple-800 font-medium text-sm px-3 py-1 bg-purple-100 hover:bg-purple-200 rounded-lg transition-all">
+                            Editar
+                          </button>
+                        </div>
+                        <dl className="grid grid-cols-1 gap-3 text-sm">
+                          <div className="flex justify-between"><span>Tipo Local:</span><span>{TIPO_LOCAL_OPTIONS.find(o => o.value === getValues('tipoLocalAtividade'))?.label || '—'}</span></div>
+                          <div className="flex justify-between"><span>Produtos:</span><span className="font-semibold break-words max-w-xs">{getValues('principaisProdutos')?.substring(0, 100) || '—'}{getValues('principaisProdutos')?.length > 100 ? '...' : ''}</span></div>
+                          <div className="flex justify-between"><span>Tipo Negócio:</span><span>{getValues('localNegocio') === 'fixo' ? 'Fixo' : 'Móvel'}</span></div>
+                          <div className="flex justify-between"><span>Já trabalhou na prefeitura:</span><span>{getValues('jaTrabalhaPrefeituraEventos') === 'sim' ? 'Sim' : 'Não'}</span></div>
+                        </dl>
+                      </section>
+
+                      {/* 4. OCUPACIONAL */}
+                      <section className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 border border-teal-200 dark:border-teal-800 rounded-2xl p-6 shadow-md">
+                        <div className="flex items-center justify-between mb-4">
+                          <h4 className="text-lg font-bold text-teal-900 dark:text-teal-100 flex items-center">
+                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2H4a2 2 0 00-2 2v2m4 6h.01" />
+                            </svg>
+                            Situação Ocupacional
+                          </h4>
+                          <button type="button" onClick={() => setCurrentStep(3)} className="text-teal-600 hover:text-teal-800 font-medium text-sm px-3 py-1 bg-teal-100 hover:bg-teal-200 rounded-lg transition-all">
+                            Editar
+                          </button>
+                        </div>
+                        <dl className="grid grid-cols-1 gap-3 text-sm">
+                          <div className="flex justify-between"><span>Situação:</span>
+                            <span className="font-semibold capitalize">
+                              {getValues('situacaoOcupacional') === 'funcionario' ? 'Funcionário Empresa' :
+                               getValues('situacaoOcupacional') === 'informal' ? 'Trabalhador Informal' :
+                               getValues('situacaoOcupacional') === 'mei' ? 'MEI' : '—'}
+                            </span>
+                          </div>
+                          {getValues('situacaoOcupacional') === 'funcionario' && (
+                            <>
+                              <div className="flex justify-between"><span>Empresa:</span><span>{getValues('empresaNome') || '—'}</span></div>
+                              <div className="flex justify-between"><span>CNPJ:</span><span>{getValues('cnpjEmpresa') || '—'}</span></div>
+                            </>
+                          )}
+                          {getValues('situacaoOcupacional') === 'mei' && (
+                            <>
+                              <div className="flex justify-between"><span>CNPJ/MEI:</span><span>{getValues('cnpjMEI') || '—'}</span></div>
+                              <div className="flex justify-between"><span>Nome Fantasia:</span><span>{getValues('meiNomeFantasia') || '—'}</span></div>
+                            </>
+                          )}
+                          {getValues('situacaoOcupacional') === 'informal' && (
+                            <div className="flex justify-between"><span>CPF Informal:</span><span>{getValues('cpfInformal') || getValues('cpf') || '—'}</span></div>
+                          )}
+                        </dl>
+                      </section>
+                    </div>
+
+                    {/* 5. FOTO DOCUMENTO */}
+                    {getValues('fotoDocumento') && (
+                      <section className="bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border border-orange-200 dark:border-orange-800 rounded-2xl p-6 shadow-md text-center">
+                        <h4 className="text-lg font-bold text-orange-900 dark:text-orange-100 mb-4 flex items-center justify-center">
+                          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          Documento com Foto ✓
+                        </h4>
+                        <div className="w-32 h-32 bg-gradient-to-br from-orange-100 to-orange-200 dark:from-orange-800/50 dark:to-orange-900/50 rounded-2xl flex items-center justify-center mx-auto shadow-lg border-4 border-orange-200 dark:border-orange-700 overflow-hidden">
+                          <img src={URL.createObjectURL(getValues('fotoDocumento'))} alt="Preview" className="w-full h-full object-cover" />
+                        </div>
+                        <p className="text-xs text-orange-700 dark:text-orange-300 mt-2">{getValues('fotoDocumento')?.name}</p>
+                        <button type="button" onClick={() => setCurrentStep(1)} className="mt-3 text-orange-600 hover:text-orange-800 font-medium text-sm px-3 py-1 bg-orange-100 hover:bg-orange-200 rounded-lg transition-all">
+                          Trocar Foto
+                        </button>
+                      </section>
+                    )}
                   </div>
                 </div>
               )}
