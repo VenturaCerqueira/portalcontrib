@@ -53,34 +53,26 @@ const form = useForm({
   const { register, handleSubmit, formState: { errors }, control, reset, trigger, watch, getValues, setValue } = form;
 
 const nextStep = async () => {   
+  console.log('🚀 Next button clicked - currentStep:', currentStep);
   setShowErrors(true);
     
   const values = getValues();
-  const situacaoOcupacional = values.situacaoOcupacional;
+  console.log('📊 All form values:', Object.keys(values).reduce((acc, k) => {
+    acc[k] = values[k] ? (values[k].name ? `[FILE: ${values[k].name}]` : values[k].toString().substring(0,50)) : 'EMPTY';
+    return acc;
+  }, {}));
     
-  // Step-specific fields
-  let stepFields;
-  if (currentStep === 1) {
-    stepFields = ['cpf','nome','sexo','dataNascimento','estadoCivil','celular','telContato','cep','logradouro','endereco','bairro','uf','municipio','fotoDocumento'];
-  } else if (currentStep === 2) {
-    stepFields = ['tipoLocalAtividade', 'principaisProdutos', 'localNegocio', 'jaTrabalhaPrefeituraEventos'];
-  } else if (currentStep === 3) {
-    // Dynamic step3 fields based on situacaoOcupacional
-    stepFields = ['situacaoOcupacional'];
-    if (situacaoOcupacional === 'funcionario') {
-      stepFields.push('empresaNome', 'cnpjEmpresa');
-    } else if (situacaoOcupacional === 'informal') {
-      stepFields.push('cpfInformal');
-    } else if (situacaoOcupacional === 'mei') {
-      stepFields.push('cnpjMEI', 'meiNomeFantasia');
-    }
-  }
-    
-  const stepValid = await trigger(stepFields);
-    
-  if (stepValid && currentStep < 4) {
+  // Always trigger ALL fields for step3/review advance
+  const fullValid = await trigger();
+  console.log('✅ Full validation result:', fullValid);
+  
+  if (fullValid && currentStep < 4) {
+    console.log('✅ Advancing to step', currentStep + 1);
     setCurrentStep(currentStep + 1);
-  } 
+  } else {
+    console.log('🚫 BLOCKED BY ERRORS:', form.formState.errors);
+    alert('Campos obrigatórios pendentes. Verifique os erros vermelhos acima.');
+  }
 };
 
   const prevStep = () => {
