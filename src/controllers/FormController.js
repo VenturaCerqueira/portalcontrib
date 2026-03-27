@@ -13,7 +13,7 @@ export const useFormController = () => {
 
 const form = useForm({
     resolver: zodResolver(cadastroSchema),
-    mode: 'onChange',
+    mode: 'onBlur',
     defaultValues: {
       nome: '',
       sexo: '',
@@ -66,8 +66,13 @@ const nextStep = async () => {
   const fullValid = await trigger();
   console.log('✅ Full validation result:', fullValid);
   
-  if (fullValid && currentStep < 4) {
-    // Trigger step-specific fields only for step validation
+  const stepFields = currentStep === 1 ? ['nome','cpf','dataNascimento','sexo','estadoCivil','celular','logradouro','endereco','bairro','cep'] :
+                      currentStep === 2 ? ['tipoLocalAtividade','principaisProdutos','localNegocio','jaTrabalhaPrefeituraEventos'] :
+                      ['situacaoOcupacional'];
+  const stepValid = await trigger(stepFields);
+  console.log('✅ Step validation result:', stepValid);
+  
+  if (stepValid) {
     const stepFields = currentStep === 1 ? ['nome','cpf','dataNascimento','sexo','estadoCivil','celular','fotoDocumento','logradouro','endereco','bairro','cep'] :
                       currentStep === 2 ? ['tipoLocalAtividade','principaisProdutos','localNegocio','jaTrabalhaPrefeituraEventos'] :
                       ['situacaoOcupacional'];
@@ -132,4 +137,3 @@ const nextStep = async () => {
     ...form
   };
 };
-
