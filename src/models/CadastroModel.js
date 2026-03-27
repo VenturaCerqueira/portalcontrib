@@ -37,6 +37,7 @@ const errorMap = (issue, ctx) => ({
 });
 
 export const cadastroSchema = z.object({
+  uf: z.string().optional(),
   nome: z.string().min(1, 'Nome completo obrigatório'),
   sexo: z.enum(['M', 'F', 'O'], { errorMap }).refine(val => val && val.length > 0, 'Sexo é obrigatório'),
   cpf: z.string()

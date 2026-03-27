@@ -52,7 +52,7 @@ const Step3Trabalho = ({ register, control, errors, watch, getValues, setValue }
               <input 
               type="radio" 
               value="mei" 
-              {...register('situacaoOcupacional')} 
+              {...register('situacaoOcupacional', { required: 'Selecione sua situação ocupacional' })} 
               className="mr-3 text-teal-600 w-5 h-5"
               autoComplete="off"
             />

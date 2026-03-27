@@ -225,7 +225,6 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
               name="email"
               control={control}
               rules={{
-                required: 'E-mail obrigatório',
                 pattern: {
                   value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                   message: 'E-mail inválido'
@@ -273,7 +272,6 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
               name="telContato"
               control={control}
               rules={{
-                required: 'Telefone obrigatório',
                 pattern: {
                   value: /^\(\d{2}\) ?\d{4,5}-\d{4}$/,
                   message: 'Telefone inválido - use (00) 0000-0000 ou (00) 90000-0000'
@@ -540,7 +538,6 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
                 placeholder="SP"
                 maxLength="2"
               />
-              {errors?.uf?.message && <p className="mt-1 text-sm text-red-600">{errors?.uf?.message}</p>}
             </div>
           </div>
         </div>
