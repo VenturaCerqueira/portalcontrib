@@ -8,6 +8,8 @@ export const useFormController = () => {
   const [currentStep, setCurrentStep ] = useState(1);
   const [showErrors, setShowErrors] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [successData, setSuccessData] = useState(null);
 
 const form = useForm({
     resolver: zodResolver(cadastroSchema),
@@ -68,17 +70,33 @@ const nextStep = async () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
   };
 
+  const newCadastro = () => {
+    reset();
+    setCurrentStep(1);
+    setShowSuccess(false);
+    setSuccessData(null);
+  };
+
   const onSubmit = async (data) => {
-    if (!confirm('Confirma salvar este cadastro no MySQL? Backend deve estar rodando (localhost:3001).')) return;
+    if (!confirm('Confirma salvar cadastro + foto no banco? Backend: localhost:3001')) return;
 
     setIsSubmitting(true);
     try {
-      const result = await ApiService.submitCadastro(data);
-      alert(`✅ ${result.message}`);
-      reset();
-      setCurrentStep(1);
+      // ✅ Create FormData for multipart (handles File auto)
+      const formData = new FormData();
+      Object.keys(data).forEach(key => {
+        if (data[key] !== undefined && data[key] !== null && data[key] !== '') {
+          formData.append(key, data[key]);
+        }
+      });
+
+      const result = await ApiService.submitCadastro(formData);
+      
+      setSuccessData(result);
+      setShowSuccess(true);
+      // Don't reset - show success first
     } catch (error) {
-      alert(`❌ Erro: ${error.message}\\n(Backend/DB OK?)`);
+      alert(`❌ Erro: ${error.message}\n(Backend/DB OK? Health: localhost:3001/api/health)`);
     } finally {
       setIsSubmitting(false);
     }
@@ -89,6 +107,9 @@ const nextStep = async () => {
     setCurrentStep,
     showErrors,
     setShowErrors,
+    showSuccess,
+    successData,
+    newCadastro,
     nextStep,
     prevStep,
     onSubmit,
@@ -96,3 +117,4 @@ const nextStep = async () => {
     ...form
   };
 };
+
