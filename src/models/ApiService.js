@@ -37,9 +37,8 @@ class ApiService {
 
   static async getContribuinte(id) {
     try {
-      // Use direct backend URL for reliability
-      const BACKEND_DIRECT = 'http://localhost:3001/api';
-      const response = await fetch(`${BACKEND_DIRECT}/contribuinte/${id}`);
+      // Use consistent BACKEND_URL (works local + Render)
+      const response = await fetch(`${BACKEND_URL}/contribuinte/${id}`);
       
       if (!response.ok) {
         let errorText = 'Unknown error';
