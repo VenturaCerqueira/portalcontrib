@@ -1,13 +1,13 @@
 services:
-  # Fullstack Backend + Frontend (monorepo)
   - type: web
-    name: portalcontrib-fullstack
-    env: node
+    name: portalcontrib
+    runtime: node
+    rootDir: backend
     buildCommand: |
-      cd backend && npm ci &&
-      cd .. && npm ci && npm run build &&
-      cp -r dist/* backend/public/
-    startCommand: cd backend && npm start
+      npm install &&
+      cd .. && npm install && npm run build &&
+      mkdir -p public && cp -r ../dist/* public/
+    startCommand: node server.js
     envVars:
       - key: NODE_VERSION
         value: 20
