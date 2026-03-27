@@ -209,8 +209,9 @@ app.post('/api/cadastros', async (req, res) => {
 });
 
 // 404
-app.use('*', (req, res) => {
-  res.status(404).json({ error: 'Endpoint não encontrado' });
+app.use(express.static('../dist'));
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, '../dist/index.html'));
 });
 
 app.listen(PORT, () => {

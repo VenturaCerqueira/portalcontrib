@@ -1,52 +1,24 @@
 services:
-  # MySQL Database
-  - type: pgsql  # Render MySQL via PostgreSQL service (MySQL compatible)
-    name: portal-mysql
-    env: mysql
-
-  # Backend - Node Web Service
+  # Fullstack Backend + Frontend (monorepo)
   - type: web
-    name: portal-backend
+    name: portalcontrib-fullstack
     env: node
-    rootDir: backend
-    buildCommand: npm ci
-    startCommand: npm start
+    buildCommand: |
+      cd backend && npm ci &&
+      cd .. && npm ci && npm run build &&
+      cp -r dist/* backend/public/
+    startCommand: cd backend && npm start
     envVars:
       - key: NODE_VERSION
         value: 20
       - key: DB_HOST
-        fromDatabase:
-          name: portal-mysql
-          property: host
+        value: db-keepsistemas-sql8.c3emmyqhonte.sa-east-1.rds.amazonaws.com
       - key: DB_PORT
-        fromDatabase:
-          name: portal-mysql
-          property: port
+        value: 3306
       - key: DB_NAME
-        fromDatabase:
-          name: portal-mysql
-          property: databaseName
+        value: db_gestaotributaria_riachaodojacuipe
       - key: DB_USER
-        fromDatabase:
-          name: portal-mysql
-          property: user
+        value: anderson
       - key: DB_PASS
-        fromDatabase:
-          name: portal-mysql
-          property: password
-      - key: FRONTEND_URL
-        value: https://portal-frontend.onrender.com  # Update after deploy
-
-  # Frontend - Static Site  
-  - type: web
-    name: portal-frontend
-    env: static
-    buildCommand: npm ci && npm run build
-    staticPublishDir: dist/
-    envVars:
-      - key: VITE_API_URL
-        fromService:
-          name: portal-backend
-          type: web
-          property: url
+        value: 126303@acv
 
