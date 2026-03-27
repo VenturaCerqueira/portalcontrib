@@ -136,7 +136,7 @@ const [rows] = await pool.execute(query, [cpfRaw]);
 
 // POST /api/cadastros - Save to ambulante table
 app.post('/api/cadastros', async (req, res) => {
-  const cadastro = req.body;
+  const { fotoDocumento, ...cadastro } = req.body; // Ignora File
   
   try {
     // Validate required fields (basic)
