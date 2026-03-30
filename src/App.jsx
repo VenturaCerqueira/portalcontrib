@@ -328,8 +328,8 @@ function App() {
                   <button type="button" onClick={() => setCurrentStep(3)} className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 px-8 rounded-xl font-semibold shadow">
                     Alterar Dados
                   </button>
-                  <button type="submit" disabled={isSubmitting} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-8 rounded-xl font-bold shadow-lg transition-all">
-                    {isSubmitting ? 'Enviando...' : 'Confirmar e Enviar Cadastro'}
+                  <button type="submit" disabled={isSubmitting || Object.keys(errors || {}).length > 0} className={`flex-1 py-3 px-8 rounded-xl font-bold shadow-lg transition-all ${Object.keys(errors || {}).length > 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700 text-white'}`}>
+                    {isSubmitting ? 'Enviando...' : Object.keys(errors || {}).length > 0 ? 'Corrija os erros acima' : 'Confirmar e Enviar Cadastro'}
                   </button>
                 </div>
               )}

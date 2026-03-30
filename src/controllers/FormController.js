@@ -66,9 +66,15 @@ const nextStep = async () => {
   const fullValid = await trigger();
   console.log('✅ Full validation result:', fullValid);
   
-  const stepFields = currentStep === 1 ? ['nome','cpf','dataNascimento','sexo','estadoCivil','celular','logradouro','endereco','bairro','cep'] :
+  if (!fullValid) {
+    console.log('❌ Full schema validation FAILED. Errors:', form.formState.errors);
+    alert('Preencha todos os campos obrigatórios corretamente antes de avançar.');
+    return;
+  }
+  
+  const stepFields = currentStep === 1 ? ['nome','cpf','dataNascimento','sexo','estadoCivil','celular','fotoDocumento','logradouro','endereco','bairro','cep'] :
                       currentStep === 2 ? ['tipoLocalAtividade','principaisProdutos','localNegocio','jaTrabalhaPrefeituraEventos'] :
-                      ['situacaoOcupacional'];
+                      ['situacaoOcupacional', 'empresaNome', 'cnpjEmpresa', 'cnpjMEI', 'meiNomeFantasia', 'cpfInformal', 'fotoDocumento'];
   const stepValid = await trigger(stepFields);
   console.log('✅ Step validation result:', stepValid);
   
