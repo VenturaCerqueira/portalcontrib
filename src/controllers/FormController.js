@@ -76,7 +76,14 @@ const nextStep = async () => {
   }, {}));
     
   const currentStepFields = getCurrentStepFields();
-  const stepValid = await trigger(currentStepFields);
+  let stepValid = await trigger(currentStepFields);
+  if (currentStep === 3) {
+    const values = getValues();
+    if (values.situacaoOcupacional === 'informal' && values.cpf) {
+      setValue('cpfInformal', values.cpf);
+      stepValid = await trigger(['cpfInformal', ...currentStepFields]);
+    }
+  }
   console.log('✅ Step validation result:', stepValid);
   console.log('🚫 Step errors fields:', stepErrors);
   

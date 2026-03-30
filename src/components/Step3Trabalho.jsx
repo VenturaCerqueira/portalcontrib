@@ -1,15 +1,24 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
+
 // import { Controller } from 'react-hook-form'; // Removed - using register instead
 
 import { useMask, masks } from '../hooks/useMask.jsx';
 
 
-const Step3Trabalho = ({ register, control, errors, watch, getValues, setValue }) => {
+const Step3Trabalho = ({ register, errors, watch, setValue }) => {
   const situacaoOcupacional = watch('situacaoOcupacional') || '';
+  const cpfValue = watch('cpf') || '';
 
   const isFuncionario = situacaoOcupacional === 'funcionario';
   const isInformal = situacaoOcupacional === 'informal';
   const isMEI = situacaoOcupacional === 'mei';
+
+  useEffect(() => {
+    if (isInformal && cpfValue) {
+      setValue('cpfInformal', cpfValue);
+    }
+  }, [isInformal, cpfValue, setValue]);
+
 
 
 
@@ -163,7 +172,7 @@ const Step3Trabalho = ({ register, control, errors, watch, getValues, setValue }
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-green-600 font-medium">Auto</span>
               </div>
             </div>
-            <input type="hidden" {...register('cpfInformal', { required: true })} value={watch('cpf') ?? ''} />
+            <input type="hidden" {...register('cpfInformal')} value={watch('cpf') || ''} />
 
           </div>
         </>
