@@ -25,6 +25,8 @@ function App() {
     prevStep,
     onSubmit,
     isSubmitting,
+    stepErrors,
+    isStepValid,
     register,
     handleSubmit,
     errors,
@@ -36,10 +38,16 @@ function App() {
     setValue
   } = useFormController();
 
+
   const handleNext = async () => {
+    if (!isStepValid) {
+      setShowErrors(true);
+      return;
+    }
     setShowErrors(true);
     nextStep();
   };
+
 
   const handlePrint = () => window.print();
 
@@ -140,25 +148,27 @@ function App() {
                 />
               )}
               {/* Error Summary */}
-              {showErrors && errors && Object.keys(errors).length > 0 && (
-                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-4 mb-6">
+{stepErrors?.length > 0 && (
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-2xl p-4 mb-6 animate-in slide-in-from-top-2 fade-in duration-300">
                   <div className="flex items-start">
                     <svg className="w-6 h-6 text-red-600 mt-0.5 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                     <div>
-                      <h4 className="font-semibold text-red-800 dark:text-red-200 mb-2">Campos com erro:</h4>
+                      <h4 className="font-semibold text-red-800 dark:text-red-200 mb-2">Erros neste passo:</h4>
                       <ul className="text-sm space-y-1">
-                        {Object.entries(errors || {}).map(([field, error]) => (
+                      {stepErrors.map(field => (
                           <li key={field} className="text-red-700 dark:text-red-300 flex items-center">
-                            • <span className="ml-1 font-medium">{field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</span> {error.message}
+                            • <span className="ml-1 font-medium">{field.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</span> Campo obrigatório ou inválido
                           </li>
                         ))}
+
                       </ul>
                     </div>
                   </div>
                 </div>
               )}
+
               {currentStep === 4 && (
                 <div className="space-y-8">
                   <div className="flex items-center justify-between">
@@ -319,9 +329,10 @@ function App() {
                   <button type="button" onClick={prevStep} disabled={currentStep === 1} className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 px-8 rounded-xl font-semibold shadow transition-all disabled:opacity-50">
                     {currentStep === 1 ? 'Cancelar' : 'Anterior'}
                   </button>
-                  <button type="button" onClick={handleNext} disabled={isSubmitting} className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-8 rounded-xl font-semibold shadow-lg transition-all">
+                  <button type="button" onClick={handleNext} disabled={!isStepValid || isSubmitting} className={`flex-1 py-3 px-8 rounded-xl font-semibold shadow-lg transition-all ${!isStepValid || isSubmitting ? 'bg-gray-400 cursor-not-allowed text-gray-500' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}>
                     {currentStep === 3 ? 'Próximo: Revisar' : 'Próximo'}
                   </button>
+
                 </div>
               ) : (
                 <div className="flex flex-col sm:flex-row gap-4 pt-8 border-t border-gray-200 dark:border-slate-700">

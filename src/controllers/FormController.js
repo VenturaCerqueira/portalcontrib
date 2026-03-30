@@ -50,7 +50,20 @@ const form = useForm({
     }
   });
 
-  const { register, handleSubmit, formState: { errors }, control, reset, trigger, watch, getValues, setValue } = form;
+const { register, handleSubmit, formState: { errors }, control, reset, trigger, watch, getValues, setValue, formState } = form;
+
+  const stepFieldsMap = {
+    1: ['nome','cpf','dataNascimento','sexo','estadoCivil','celular','logradouro','endereco','bairro','cep'],
+    2: ['tipoLocalAtividade','principaisProdutos','localNegocio','jaTrabalhaPrefeituraEventos'],
+    3: ['situacaoOcupacional', 'empresaNome', 'cnpjEmpresa', 'cnpjMEI', 'meiNomeFantasia', 'cpfInformal', 'fotoDocumento']
+  };
+
+  const getCurrentStepFields = () => stepFieldsMap[currentStep] || [];
+
+  const stepErrors = formState.errors ? Object.keys(formState.errors).filter(field => getCurrentStepFields().includes(field)) : [];
+
+  const isStepValid = stepErrors.length === 0;
+
 
 const nextStep = async () => {   
   console.log('🚀 Next button clicked - currentStep:', currentStep);
@@ -62,18 +75,19 @@ const nextStep = async () => {
     return acc;
   }, {}));
     
-  // Step-specific fields (foto optional in step1)
-  const stepFields = currentStep === 1 ? ['nome','cpf','dataNascimento','sexo','estadoCivil','celular','logradouro','endereco','bairro','cep'] :
-                      currentStep === 2 ? ['tipoLocalAtividade','principaisProdutos','localNegocio','jaTrabalhaPrefeituraEventos'] :
-                      ['situacaoOcupacional', 'empresaNome', 'cnpjEmpresa', 'cnpjMEI', 'meiNomeFantasia', 'cpfInformal', 'fotoDocumento'];
-  const stepValid = await trigger(stepFields);
+  const currentStepFields = getCurrentStepFields();
+  const stepValid = await trigger(currentStepFields);
   console.log('✅ Step validation result:', stepValid);
+  console.log('🚫 Step errors fields:', stepErrors);
   
   if (!stepValid) {
-    console.log('🚫 Step BLOCKED. Errors:', form.formState.errors);
-    alert('Campos obrigatórios do passo pendentes. Verifique vermelhos.');
+    const failingFields = currentStepFields.filter(field => formState.errors[field]);
+    const fieldNames = failingFields.map(f => f.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())).join(', ');
+    console.log('🚫 Step BLOCKED. Failing fields:', failingFields);
+    alert(`Campos obrigatórios pendentes no Passo ${currentStep}: ${fieldNames}\n\nVerifique os campos vermelhos e corrija.`);
     return;
   }
+
   
   // Full validation only before review (step4)
   if (currentStep === 3) {
@@ -138,6 +152,10 @@ const nextStep = async () => {
     prevStep,
     onSubmit,
     isSubmitting,
+    stepFields: getCurrentStepFields(),
+    stepErrors,
+    isStepValid,
     ...form
   };
 };
+

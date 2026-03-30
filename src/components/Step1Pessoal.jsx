@@ -497,16 +497,18 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Nº *</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2 text-orange-900">Nº da residência <span className="text-red-500">*</span></label>
             <input
               {...register('endereco')}
               className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors ${
-                errors?.endereco ? 'border-red-500' : 'border-gray-300'
+                errors?.endereco ? 'border-red-500 ring-2 ring-red-200 animate-pulse' : 'border-gray-300'
               }`}
-              placeholder="Nº 123, Apto 45, Bloco A"
+              placeholder="Ex: 123, Apto 45, s/n, Qd 12 Lote 5"
             />
-            {errors?.endereco?.message && <p className="mt-1 text-sm text-red-600">{errors?.endereco?.message}</p>}
+            {errors?.endereco?.message && <p className="mt-1 text-sm text-red-600 font-medium">{errors?.endereco?.message}</p>}
+            <p className="text-xs text-gray-500 mt-1 italic">Após buscar o CEP, preencha o número da casa/apartamento. Use s/n se não tiver número.</p>
           </div>
+
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Bairro *</label>
