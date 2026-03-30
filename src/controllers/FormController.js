@@ -62,34 +62,32 @@ const nextStep = async () => {
     return acc;
   }, {}));
     
-  // Always trigger ALL fields for step3/review advance
-  const fullValid = await trigger();
-  console.log('✅ Full validation result:', fullValid);
-  
-  if (!fullValid) {
-    console.log('❌ Full schema validation FAILED. Errors:', form.formState.errors);
-    alert('Preencha todos os campos obrigatórios corretamente antes de avançar.');
-    return;
-  }
-  
-  const stepFields = currentStep === 1 ? ['nome','cpf','dataNascimento','sexo','estadoCivil','celular','fotoDocumento','logradouro','endereco','bairro','cep'] :
+  // Step-specific fields (foto optional in step1)
+  const stepFields = currentStep === 1 ? ['nome','cpf','dataNascimento','sexo','estadoCivil','celular','logradouro','endereco','bairro','cep'] :
                       currentStep === 2 ? ['tipoLocalAtividade','principaisProdutos','localNegocio','jaTrabalhaPrefeituraEventos'] :
                       ['situacaoOcupacional', 'empresaNome', 'cnpjEmpresa', 'cnpjMEI', 'meiNomeFantasia', 'cpfInformal', 'fotoDocumento'];
   const stepValid = await trigger(stepFields);
   console.log('✅ Step validation result:', stepValid);
   
-  if (stepValid) {
-    const stepFields = currentStep === 1 ? ['nome','cpf','dataNascimento','sexo','estadoCivil','celular','fotoDocumento','logradouro','endereco','bairro','cep'] :
-                      currentStep === 2 ? ['tipoLocalAtividade','principaisProdutos','localNegocio','jaTrabalhaPrefeituraEventos'] :
-                      ['situacaoOcupacional'];
-    await trigger(stepFields);
-    console.log('✅ Step fields validated:', stepFields);
-    console.log('✅ Advancing to step', currentStep + 1);
-    setCurrentStep(currentStep + 1);
-  } else {
-    console.log('🚫 BLOCKED BY ERRORS:', form.formState.errors);
-    alert('Campos obrigatórios pendentes. Verifique os erros vermelhos acima.');
+  if (!stepValid) {
+    console.log('🚫 Step BLOCKED. Errors:', form.formState.errors);
+    alert('Campos obrigatórios do passo pendentes. Verifique vermelhos.');
+    return;
   }
+  
+  // Full validation only before review (step4)
+  if (currentStep === 3) {
+    const fullValid = await trigger();
+    console.log('✅ Full validation for review:', fullValid);
+    if (!fullValid) {
+      console.log('❌ Full FAILED before step4:', form.formState.errors);
+      alert('Complete todos os dados antes da revisão.');
+      return;
+    }
+  }
+  
+  console.log('✅ Advancing to step', currentStep + 1);
+  setCurrentStep(currentStep + 1);
 };
 
   const prevStep = () => {
