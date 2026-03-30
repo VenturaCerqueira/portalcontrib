@@ -102,14 +102,11 @@ celular: z.string().min(1, 'Celular obrigatório').regex(/^\(\d{2}\) ?9\d{4}-\d{
   cnpjEmpresa: z.string().optional(),
   empresaEndereco: z.string().optional(),
   empresaTel: z.string().optional(),
-  cpfInformal: z.string()
-    .optional()
-    .transform(val => val || '')
-    .refine((val, ctx) => {
-      if (!val.trim()) return ctx.createIssue({ code: z.ZodIssueCode.custom, message: 'CPF Informal obrigatório e válido', path: [ctx.path[0]] });
-      const raw = val.replace(/\D/g, '');
-      return raw.length === 11 && isValidCPF(raw);
-    }, { message: 'CPF Informal obrigatório e válido' }),
+  cpfInformal: z.string().optional()
+    .transform((val) => val || '')
+    .refine((val) => val.trim() && val.replace(/\D/g, '').length === 11 && isValidCPF(val.replace(/\D/g, '')), {
+      message: 'CPF Informal obrigatório e válido'
+    }),
   cnpjMEI: z.string().optional(),
 meiNomeFantasia: z.string().optional(),
   fotoDocumento: z.instanceof(File, { message: 'Documento com foto obrigatório' })
