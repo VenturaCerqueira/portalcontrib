@@ -5,16 +5,28 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const multer = require('multer');
 const path = require('path');
-const AWS = require('aws-sdk');
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 // AWS S3 Config
-const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID || process.env.AWS_SECRET_ACCESS_KEY,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_DEFAULT_REGION || 'sa-east-1'
+// AWS S3 Config with validation
+if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_BUCKET) {
+  console.warn('⚠️ AWS S3 vars missing/incomplete - photo uploads will fail. Copy backend/.env.example → .env');
+}
+
+const s3Client = new S3Client({
+  region: process.env.AWS_REGION || 'sa-east-1'
+});
+
+// Debug S3 config (masks sensitive data)
+console.log('☁️ S3 Config loaded:', {
+  bucket: process.env.AWS_BUCKET || 'MISSING',
+  region: process.env.AWS_REGION || 'sa-east-1',
+  accessKey: process.env.AWS_ACCESS_KEY_ID ? `${process.env.AWS_ACCESS_KEY_ID.slice(0,4)}...OK` : 'MISSING',
+  secretSet: !!process.env.AWS_SECRET_ACCESS_KEY,
+  fullConfig: process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY && process.env.AWS_BUCKET
 });
 
 // Multer memory storage for S3 upload (2MB max)
@@ -131,7 +143,6 @@ app.get('/api/validate-cpf/:cpf', async (req, res) => {
   }
 });
 
-// ✅ NEW: Complete POST /api/cadastros with PHOTO UPLOAD + TRANSACTION
 app.post('/api/cadastros', upload.single('fotoDocumento'), async (req, res) => {
   const cadastro = req.body;
   const file = req.file;
@@ -193,7 +204,7 @@ app.post('/api/cadastros', upload.single('fotoDocumento'), async (req, res) => {
           ACL: 'public-read'
         };
         
-        const s3Result = await s3.upload(uploadParams).promise();
+        const s3Result = await s3Client.send(new PutObjectCommand(uploadParams));
         photoUrl = s3Result.Location;
 
         // 2. Save photo metadata (store S3 path)

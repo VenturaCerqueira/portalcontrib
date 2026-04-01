@@ -107,36 +107,14 @@ function App() {
               Enviado com Sucesso!
             </h1>
             <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl rounded-2xl p-8 shadow-xl mb-8">
-              <p className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-2">
-                Cadastro #{successData.id}
+              <p className="text-xl text-emerald-700 dark:text-emerald-300 mb-6">
+                Seu cadastro foi recebido.
               </p>
-              <p className="text-lg text-emerald-700 dark:text-emerald-300 mb-6">
-                Total cadastrados: <span className="font-bold">{successData.total}</span>
-              </p>
-              {successData.photoUrl && (
-                <div className="mb-6">
-                  <p className="text-sm font-medium text-gray-700 mb-3 dark:text-gray-300">Foto do Documento:</p>
-                  <img 
-                    src={`http://localhost:3001${successData.photoUrl}`} 
-                    alt="Foto salva" 
-                    className="w-48 h-48 object-cover rounded-2xl shadow-lg mx-auto border-4 border-emerald-200 dark:border-emerald-700"
-                  />
-                </div>
-              )}
             </div>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button
-                onClick={() => window.print()}
-                className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-4 px-8 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all flex items-center justify-center mx-auto sm:mx-0"
-              >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v.01" />
-                </svg>
-                Imprimir Comprovante
-              </button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
                 onClick={newCadastro}
-                className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-4 px-8 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all flex items-center justify-center mx-auto sm:mx-0"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white py-4 px-8 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all flex items-center justify-center"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
