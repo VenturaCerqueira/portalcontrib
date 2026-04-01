@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3001;
 
 // AWS S3 Config
 const s3 = new AWS.S3({
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID || process.env.AWS_SECRET_ACCESS_KEY,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: process.env.AWS_DEFAULT_REGION || 'sa-east-1'
 });
@@ -249,6 +249,6 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Backend rodando: http://localhost:${PORT}`);
   console.log(`📊 Health: http://localhost:${PORT}/api/health`);
-  console.log(`☁️ S3 Bucket: ${process.env.AWS_BUCKET || 'not set'}`);
+  console.log('☁️ S3 Config loaded');
 });
 
