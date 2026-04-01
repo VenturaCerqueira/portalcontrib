@@ -4,9 +4,12 @@ services:
     runtime: node
     rootDir: backend
     buildCommand: |
-      npm install &&
-      cd .. && npm install && npm run build &&
-      mkdir -p public && cp -r ../dist/* public/
+      npm ci &&
+      cd .. && npm ci && npm run build &&
+      cd backend &&
+      rm -rf public && mkdir -p public &&
+      cp -r ../dist/* public/ &&
+      echo "✅ Frontend copied to backend/public/"
     startCommand: node server.js
     envVars:
       - key: NODE_VERSION
