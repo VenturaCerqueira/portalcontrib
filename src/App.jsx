@@ -50,7 +50,7 @@ function App() {
   };
 
 
-  const handlePrint = () => window.print();
+
 
   if (showSuccess && successData) {
     return (
@@ -179,17 +179,7 @@ function App() {
                       </svg>
                       Revisão Completa do Cadastro
                     </h3>
-                    <button
-                      type="button"
-                      onClick={handlePrint}
-                      className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-xl font-semibold shadow-lg transition-all flex items-center"
-                    >
-                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v.01" />
-                      </svg>
-                      Imprimir
-                    </button>
-                  </div>
+                    </div>
 
 {/* ✅ DYNAMIC REVIEW SECTIONS */}
                   <div className="space-y-6">
@@ -334,19 +324,19 @@ function App() {
                     </>
 
                   </button>
-                  <button type="button" onClick={handleNext} disabled={!isStepValid || isSubmitting} className={`flex-1 py-3 px-8 rounded-xl font-semibold shadow-lg transition-all ${!isStepValid || isSubmitting ? 'bg-gray-400 cursor-not-allowed text-gray-500' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}>
-                    {currentStep === 3 ? (
-                      <>
-                        <ArrowRightIcon className="w-5 h-5 -ml-1 mr-2 flex-shrink-0" />
-                        Próximo: Revisar
-                      </>
-                    ) : (
-                      <>
-                        <ArrowRightIcon className="w-5 h-5 -ml-1 mr-2 flex-shrink-0" />
-                        Próximo
-                      </>
-                    )}
-                  </button>
+                    <button type="button" onClick={handleNext} disabled={!isStepValid || isSubmitting} className={`flex-1 flex items-center justify-center py-3 px-8 rounded-xl font-semibold shadow-lg transition-all gap-2 ${!isStepValid || isSubmitting ? 'bg-gray-400 cursor-not-allowed text-gray-500' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}>
+                      {currentStep === 3 ? (
+                        <>
+                          <ArrowRightIcon className="w-5 h-5 mr-2 flex-shrink-0" />
+                          Próximo: Revisar
+                        </>
+                      ) : (
+                        <>
+                          <ArrowRightIcon className="w-5 h-5 mr-2 flex-shrink-0" />
+                          Próximo
+                        </>
+                      )}
+                    </button>
 
                 </div>
               ) : (

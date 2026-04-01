@@ -123,8 +123,6 @@ const nextStep = async () => {
   };
 
   const onSubmit = async (data) => {
-    if (!confirm('Confirma salvar cadastro + foto no banco? Backend: localhost:3001')) return;
-
     setIsSubmitting(true);
     try {
       // ✅ Create FormData for multipart (handles File auto)
