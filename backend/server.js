@@ -207,9 +207,16 @@ app.post('/api/cadastros', upload.single('fotoDocumento'), async (req, res) => {
         const s3Result = await s3Client.send(new PutObjectCommand(uploadParams));
         photoUrl = s3Result.Location;
 
-        // ✅ FIXED: Save FULL S3 URL in DB path field
+        // 🔧 DEBUG: Check why full URL not saving
         const fullS3Url = photoUrl || `https://${process.env.AWS_BUCKET}.s3.${process.env.AWS_REGION || 'sa-east-1'}.amazonaws.com/${photoPath}`;
-        console.log('📸 Saving photo:', { filename, relativePath: photoPath, fullUrl: fullS3Url });
+        console.log('🔍 S3 DEBUG:', {
+          photoUrl, 
+          bucket: process.env.AWS_BUCKET, 
+          region: process.env.AWS_REGION || 'sa-east-1',
+          photoPath,
+          fullS3Url,
+          usingPhotoUrl: !!photoUrl
+        });
 
         // 2. Save photo metadata (store FULL S3 URL in path)
         const photoQuery = `
