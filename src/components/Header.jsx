@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Bars3Icon, XMarkIcon, BriefcaseIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon, BriefcaseIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 
 import ApiService from '../models/ApiService'
 
@@ -102,10 +102,13 @@ const Header = () => {
               href="https://www.e-contrib.com.br/portal-contribuinte/riachaodojacuipe"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 py-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-semibold text-sm rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 border border-white/30 hover:border-white/50 whitespace-nowrap"
+              className="flex items-center px-5 py-2.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-semibold text-sm rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 border border-white/30 hover:border-white/50 whitespace-nowrap"
               aria-label="Acessar Portal da Prefeitura"
             >
-              Acessar Portal
+              <>
+                <ArrowTopRightOnSquareIcon className="w-4 h-4 mr-1 flex-shrink-0" />
+                Acessar Portal
+              </>
             </a>
             <button
               onClick={toggleMobileMenu}

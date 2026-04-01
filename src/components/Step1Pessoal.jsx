@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { UserGroupIcon, MapPinIcon } from '@heroicons/react/24/outline';
 import { Controller } from 'react-hook-form';
 
 import { useMask, masks } from '../hooks/useMask.jsx';
@@ -63,7 +64,10 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
   return (
     <div className="space-y-8">
       <section>
-        <h3 className="text-xl font-bold text-gray-900 mb-6 border-b border-gray-200 pb-3">Dados Pessoais</h3>
+        <h3 className="lg:col-span-3 text-2xl font-bold text-gray-900 dark:text-slate-100 border-b border-teal-200 dark:border-teal-900/50 pb-3 flex items-center">
+            <UserGroupIcon className="w-7 h-7 mr-3 text-blue-600" />
+            Dados Pessoais
+          </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -430,7 +434,10 @@ accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf"
       </section>
 
       <section>
-        <h3 className="text-xl font-bold text-gray-900 mb-6 border-b border-gray-200 pb-3">Endereço Residencial *</h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-6 border-b border-gray-200 pb-3 flex items-center">
+            <MapPinIcon className="w-7 h-7 mr-3 text-orange-600" />
+            Endereço Residencial *
+          </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">

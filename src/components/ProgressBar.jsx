@@ -1,12 +1,14 @@
 import React from 'react';
+import { UserIcon, ClipboardDocumentListIcon, BuildingOfficeIcon, DocumentCheckIcon } from '@heroicons/react/24/outline';
 
 const ProgressBar = ({ currentStep, totalSteps = 4 }) => {
-  const steps = Array.from({ length: totalSteps }, (_, i) => ({
-    number: i + 1,
-    label: ['Pessoal', 'Detalhes Atividade', 'Trabalho Atual', 'Revisão'][i],
-    active: currentStep === i + 1,
-    completed: currentStep > i + 1
-  }));
+    const steps = Array.from({ length: totalSteps }, (_, i) => ({
+      number: i + 1,
+      label: ['Pessoal', 'Detalhes Atividade', 'Trabalho Atual', 'Revisão'][i],
+      icon: [UserIcon, ClipboardDocumentListIcon, BuildingOfficeIcon, DocumentCheckIcon][i],
+      active: currentStep === i + 1,
+      completed: currentStep > i + 1
+    }));
 
   return (
     <div className="mb-12">
@@ -19,7 +21,11 @@ const ProgressBar = ({ currentStep, totalSteps = 4 }) => {
               step.active ? 'bg-blue-500 text-white shadow-blue-300 dark:bg-blue-400 dark:shadow-blue-500/50' :
               'bg-gray-200 text-gray-500 shadow-gray-200 dark:bg-slate-700 dark:text-slate-400 dark:shadow-slate-600/50'
             }`}>
-              {step.completed ? '✓' : step.number}
+              {step.completed ? (
+                <DocumentCheckIcon className="w-6 h-6" />
+              ) : (
+                <step.icon className="w-6 h-6" />
+              )}
             </div>
             <span className={`mt-2 text-xs font-medium ${
               step.completed ? 'text-emerald-600 dark:text-emerald-400' :
