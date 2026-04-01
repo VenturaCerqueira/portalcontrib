@@ -307,7 +307,7 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
         <div className="grid grid-cols-1 gap-6 mt-6">
           <div className="md:col-span-1">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Documento com Foto <span className="text-red-500">*</span>
+              Documento com Foto (PDF, JPG, PNG - máx. 2MB) <span className="text-red-500">*</span>
             </label>
             <Controller
               name="fotoDocumento"
@@ -321,7 +321,7 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
                   <div className={`relative group ${error ? 'ring-2 ring-red-200' : ''}`}>
                     <input
                       type="file"
-                      accept="image/*,.pdf"
+accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf"
                       onChange={(e) => {
                         const selectedFile = e.target.files?.[0];
                         if (selectedFile) {
@@ -330,9 +330,18 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
                       }}
                       className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border-gray-300 hover:border-gray-400"
                     />
-                    {preview && (
+{preview && (
                       <div className="mt-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
-                        <img src={preview} alt="Preview" className="max-w-full max-h-48 object-contain rounded-lg shadow-md mx-auto" />
+                        {file.name.toLowerCase().endsWith('.pdf') ? (
+                          <div className="w-32 h-48 bg-gradient-to-br from-red-100 to-red-200 dark:from-red-900/30 dark:to-red-800/30 rounded-lg flex items-center justify-center mx-auto shadow-lg border-2 border-red-200 dark:border-red-700">
+                            <svg className="w-16 h-16 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm7 3a1 1 0 112 0v6a1 1 0 11-2 0V7zm-3 2a1 1 0 110 2 1 1 0 010-2zm3 2a1 1 0 110 2 1 1 0 010-2z" clipRule="evenodd" />
+                            </svg>
+                            <p className="text-xs font-medium text-red-700 dark:text-red-300 mt-2">PDF Preview</p>
+                          </div>
+                        ) : (
+                          <img src={preview} alt="Preview" className="max-w-full max-h-48 object-contain rounded-lg shadow-md mx-auto" />
+                        )}
                         <p className="text-xs text-gray-500 mt-2 text-center truncate">{file.name}</p>
                       </div>
                     )}

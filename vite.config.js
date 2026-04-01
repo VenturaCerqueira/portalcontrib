@@ -11,10 +11,16 @@ export default defineConfig({
 
   server: {
     cors: false,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false
+      }
+    },
     headers: {
       'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https: http://fonts.googleapis.com data:; font-src 'self' https: https://fonts.gstatic.com data:; img-src 'self' data: https: blob:; connect-src 'self' http://localhost:3001 ws://localhost:* https:;"
     }
   },
 
 })
-

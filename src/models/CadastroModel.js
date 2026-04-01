@@ -109,9 +109,9 @@ celular: z.string().min(1, 'Celular obrigatório').regex(/^\(\d{2}\) ?9\d{4}-\d{
     .refine(isValidCPF, { message: 'CPF Informal inválido' }),
   cnpjMEI: z.string().optional(),
 meiNomeFantasia: z.string().optional(),
-  fotoDocumento: z.instanceof(File, { message: 'Documento com foto obrigatório' })
-    .refine((file) => file.size <= 5 * 1024 * 1024, { message: 'Arquivo muito grande. Máximo 5MB' })
-    .refine((file) => /\.(jpe?g|png|gif|pdf)$/i.test(file.name), { message: 'Apenas JPG, PNG, GIF ou PDF' })
+fotoDocumento: z.instanceof(File, { message: 'Documento com foto obrigatório' })
+    .refine((file) => file.size <= 2 * 1024 * 1024, { message: 'Arquivo muito grande. Máximo 2MB' })
+    .refine((file) => /\.(jpe?g|png|pdf)$/i.test(file.name), { message: 'Apenas PDF, JPG/JPEG ou PNG' })
 
 }, { errorMap }).superRefine((data, ctx) => {
   if (data.situacaoOcupacional === 'funcionario') {

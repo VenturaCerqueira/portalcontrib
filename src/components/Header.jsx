@@ -36,7 +36,9 @@ const Header = () => {
         console.error('Header fetchContribuinte failed:', error)
         console.error('Full error details:', error.message)
         setFetchError(error.message)
-        // Fallback remains prefeitura name
+        // Mock fallback for dev without backend
+        setContribuinteNome('Prefeitura Municipal de Riachão do Jacuípe')
+        setImageLoading(false)
       } finally {
         setIsLoading(false)
       }

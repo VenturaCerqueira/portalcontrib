@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image/') || file.mimetype === 'application/pdf') {
+if ((file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'application/pdf')) {
     cb(null, true);
   } else {
     cb(new Error('Apenas imagens (JPG, PNG) ou PDF permitidos'), false);
@@ -33,13 +33,20 @@ const fileFilter = (req, file, cb) => {
 
 const upload = multer({ 
   storage, 
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
   fileFilter 
 });
 
 // Middleware
 app.use(express.json({ limit: '10mb' }));
-app.use(cors({ origin: [process.env.FRONTEND_URL || 'http://localhost:5173', 'https://portalcontrib-frontend.onrender.com'], credentials: true }));
+const allowedOrigins = process.env.NODE_ENV === 'production' 
+  ? ['https://portalcontrib-frontend.onrender.com']
+  : ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'];
+
+app.use(cors({ 
+  origin: allowedOrigins,
+  credentials: true 
+}));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Rate limiting

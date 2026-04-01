@@ -1,4 +1,6 @@
-const BACKEND_URL = import.meta.env.VITE_API_URL || (typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3001') + '/api';
+const BACKEND_URL = import.meta.env.DEV 
+  ? '/api' 
+  : (import.meta.env.VITE_API_URL || 'https://portalcontrib-backend.onrender.com/api');
 
 class ApiService {
   static async validateCPF(rawCPF) {
