@@ -161,9 +161,10 @@ app.post('/api/cadastros', upload.single('fotoDocumento'), async (req, res) => {
         INSERT INTO ambulante (
           nome, cpf, rg, nit, sexo, dataNascimento, estadoCivil, email, telContato, celular,
           cep, logradouro, endereco, bairro, municipio, uf, atividadePretendida,
+          tipoLocalAtividade, principaisProdutos, localNegocio, jaTrabalhaPrefeituraEventos,
           situacaoOcupacional, empresaNome, cnpjEmpresa, empresaEndereco, empresaTel,
           cpfInformal, cnpjMEI, meiNomeFantasia
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `;
 
       const ambulanteValues = [
@@ -172,6 +173,7 @@ app.post('/api/cadastros', upload.single('fotoDocumento'), async (req, res) => {
         cadastro.telContato || null, cadastro.celular || null, cadastro.cep || null,
         cadastro.logradouro || null, cadastro.endereco || null, cadastro.bairro || null,
         cadastro.municipio || null, cadastro.uf || null, cadastro.atividadePretendida || null,
+        cadastro.tipoLocalAtividade || null, cadastro.principaisProdutos || null, cadastro.localNegocio || null, cadastro.jaTrabalhaPrefeituraEventos || null,
         safeSituacaoOcupacional, cadastro.empresaNome || null, cadastro.cnpjEmpresa || null,
         cadastro.empresaEndereco || null, cadastro.empresaTel || null, cadastro.cpfInformal || null,
         cadastro.cnpjMEI || null, cadastro.meiNomeFantasia || null

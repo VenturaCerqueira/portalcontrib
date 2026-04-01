@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, ArrowRightIcon, XMarkIcon } from '@heroicons/react/24/outline';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ProgressBar from './components/ProgressBar';
@@ -328,22 +328,21 @@ function App() {
               {currentStep < 4 ? (
                 <div className="flex flex-col sm:flex-row gap-4 pt-8 border-t border-gray-200 dark:border-slate-700">
                   <button type="button" onClick={prevStep} disabled={currentStep === 1} className="flex-1 flex items-center justify-center bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 px-8 rounded-xl font-semibold shadow transition-all disabled:opacity-50">
-                    {currentStep === 1 ? 'Cancelar' : (
-                      <>
-                        <ArrowLeftIcon className="w-4 h-4 mr-2 flex-shrink-0" />
-                        Anterior
-                      </>
-                    )}
+                    <>
+                      {currentStep === 1 ? <XMarkIcon className="w-5 h-5 -ml-1 mr-2 flex-shrink-0" /> : <ArrowLeftIcon className="w-5 h-5 -ml-1 mr-2 flex-shrink-0" />}
+                      {currentStep === 1 ? 'Cancelar' : 'Anterior'}
+                    </>
+
                   </button>
                   <button type="button" onClick={handleNext} disabled={!isStepValid || isSubmitting} className={`flex-1 py-3 px-8 rounded-xl font-semibold shadow-lg transition-all ${!isStepValid || isSubmitting ? 'bg-gray-400 cursor-not-allowed text-gray-500' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}>
                     {currentStep === 3 ? (
                       <>
-                        <ArrowRightIcon className="w-5 h-5 mr-2" />
+                        <ArrowRightIcon className="w-5 h-5 -ml-1 mr-2 flex-shrink-0" />
                         Próximo: Revisar
                       </>
                     ) : (
                       <>
-                        <ArrowRightIcon className="w-5 h-5 mr-2" />
+                        <ArrowRightIcon className="w-5 h-5 -ml-1 mr-2 flex-shrink-0" />
                         Próximo
                       </>
                     )}
