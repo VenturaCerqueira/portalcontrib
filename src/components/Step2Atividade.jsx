@@ -147,7 +147,7 @@ const Step2Atividade = ({ control, errors, register, watch }) => {
       {/* 5. Já trabalhou na prefeitura - RADIO */}
       <div className="lg:col-span-3">
         <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-3">
-          Já trabalhou em algum evento da prefeitura de Riachão do Jacuípe/BA? <span className="text-red-500">*</span>
+          Já trabalhou em algum evento da PREFEITURA MUNICIPAL DE RIACHÃO DO JACUÍPE? <span className="text-red-500">*</span>
         </label>
         <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 ${errors?.jaTrabalhaPrefeituraEventos ? 'ring-2 ring-red-200/50 bg-red-50/50 rounded-xl p-4' : ''}`}>
           <label className={`flex items-center p-4 border-2 rounded-xl hover:shadow-md transition-all cursor-pointer group bg-white dark:bg-slate-800/50 ${errors?.jaTrabalhaPrefeituraEventos ? 'border-red-400 bg-red-50/50 dark:bg-red-900/20' : 'border-gray-200 dark:border-slate-700 hover:border-purple-300 dark:hover:border-purple-500 hover:shadow-md dark:hover:shadow-purple-500/20'}`}>

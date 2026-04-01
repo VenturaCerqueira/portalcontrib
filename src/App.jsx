@@ -3,6 +3,7 @@ import { ArrowLeftIcon, ArrowRightIcon, XMarkIcon } from '@heroicons/react/24/ou
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ProgressBar from './components/ProgressBar';
+import IntroScreen from './components/IntroScreen';
 import Step1Pessoal from './components/Step1Pessoal';
 import Step2Atividade from './components/Step2Atividade';
 import Step3Trabalho from './components/Step3Trabalho';
@@ -40,6 +41,22 @@ function App() {
   } = useFormController();
 
 
+  const [introVisible, setIntroVisible] = useState(true);
+
+  const [isLoadingStart, setIsLoadingStart] = useState(false);
+
+  const handleStartCadastro = async () => {
+    setIsLoadingStart(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 3000));
+    } finally {
+      setIntroVisible(false);
+      if (setCurrentStep) setCurrentStep(1);
+      if (reset) reset();
+    }
+    setIsLoadingStart(false);
+  };
+
   const handleNext = async () => {
     if (!isStepValid) {
       setShowErrors(true);
@@ -49,8 +66,31 @@ function App() {
     nextStep();
   };
 
+  if (introVisible && !isLoadingStart) {
+    return <IntroScreen onStart={handleStartCadastro} />;
+  }
 
-
+  if (introVisible && isLoadingStart) {
+    return (
+      <div className="fixed inset-0 bg-gradient-to-r from-[#0052cc]/80 to-blue-600/80 backdrop-blur-md z-50 flex items-center justify-center min-h-screen">
+        <div className="bg-white/20 backdrop-blur-xl rounded-2xl p-8 text-center border border-white/30 shadow-2xl max-w-md mx-4">
+          <div className="w-16 h-16 bg-white/30 rounded-2xl flex items-center justify-center mb-6 mx-auto border border-white/50">
+            <svg className="w-8 h-8 text-white animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+          </div>
+          <h3 className="text-xl font-bold text-white mb-2">Iniciando Cadastro...</h3>
+          <p className="text-white/90 text-sm">Preparando formulário seguro</p>
+          <div className="flex justify-center space-x-1 mt-4">
+            <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce [animation-delay:0.1s]"></div>
+            <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+            <div className="w-2 h-2 bg-white/50 rounded-full animate-bounce [animation-delay:0.3s]"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (showSuccess && successData) {
     return (
@@ -86,7 +126,7 @@ function App() {
             </div>
             <div className="flex flex-col sm:flex-row gap-4">
               <button
-                onClick={handlePrint}
+                onClick={() => window.print()}
                 className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-4 px-8 rounded-2xl font-bold shadow-xl hover:shadow-2xl transition-all flex items-center justify-center mx-auto sm:mx-0"
               >
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,7 +158,18 @@ function App() {
         <div className="max-w-6xl mx-auto pb-12 md:pb-16 lg:pb-20">
           <div className="bg-white dark:bg-slate-800/95 border border-gray-200 dark:border-slate-700 rounded-3xl shadow-xl dark:shadow-2xl p-8 md:p-12">
             <ProgressBar currentStep={currentStep} />
-            <form autoComplete="off" onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+            <form autoComplete="off" onSubmit={handleSubmit(onSubmit)} onKeyDown={(e) => {
+  if (e.key === 'Enter' && currentStep <= 4) {
+    e.preventDefault();
+    console.log('⛔ Enter blocked - use Próximo/Anterior buttons');
+    // Optional: Show user-friendly alert after debounce
+    if (!e.defaultPrevented) {
+      setTimeout(() => {
+        alert('Use os botões "Próximo" ou "Anterior" para navegar entre os passos.');
+      }, 100);
+    }
+  }
+}} className="space-y-8">
               {currentStep === 1 && (
                 <Step1Pessoal 
                   key={currentStep}
@@ -170,7 +221,7 @@ function App() {
                 </div>
               )}
 
-              {currentStep === 4 && (
+{currentStep === 4 && (
                 <div className="space-y-8">
                   <div className="flex items-center justify-between">
                     <h3 className="text-2xl font-bold text-gray-900 dark:text-slate-100 border-b border-indigo-200 dark:border-indigo-900/50 pb-3 flex items-center">
@@ -180,6 +231,9 @@ function App() {
                       Revisão Completa do Cadastro
                     </h3>
                     </div>
+                  <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+"Confirmar e Enviar Cadastro"
+                  </div>
 
 {/* ✅ DYNAMIC REVIEW SECTIONS */}
                   <div className="space-y-6">
@@ -324,7 +378,8 @@ function App() {
                     </>
 
                   </button>
-                    <button type="button" onClick={handleNext} disabled={!isStepValid || isSubmitting} className={`flex-1 flex items-center justify-center py-3 px-8 rounded-xl font-semibold shadow-lg transition-all gap-2 ${!isStepValid || isSubmitting ? 'bg-gray-400 cursor-not-allowed text-gray-500' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}>
+                    <button type="button" onClick={handleNext} disabled={!isStepValid || isSubmitting} className={`flex-1 flex items-center justify-center py-3 px-8 rounded-xl font-semibold shadow-lg transition-all gap-2 ${!isStepValid || isSubmitting ? 'bg-gray-400 cursor-not-allowed text-gray-500' : 'bg-gradient-to-r from-[#0052cc]/95 to-blue-600/95 hover:from-[#0052cc] hover:to-blue-600 text-white'}`}>
+
                       {currentStep === 3 ? (
                         <>
                           <ArrowRightIcon className="w-5 h-5 mr-2 flex-shrink-0" />
@@ -344,8 +399,8 @@ function App() {
                   <button type="button" onClick={() => setCurrentStep(3)} className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 px-8 rounded-xl font-semibold shadow">
                     Alterar Dados
                   </button>
-                  <button type="submit" disabled={isSubmitting || Object.keys(errors || {}).length > 0} className={`flex-1 py-3 px-8 rounded-xl font-bold shadow-lg transition-all ${Object.keys(errors || {}).length > 0 ? 'bg-gray-400 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700 text-white'}`}>
-                    {isSubmitting ? 'Enviando...' : Object.keys(errors || {}).length > 0 ? 'Corrija os erros acima' : 'Confirmar e Enviar Cadastro'}
+                  <button type="submit" disabled={isSubmitting || Object.keys(errors || {}).length > 0 || !getValues('fotoDocumento')} className={`flex-1 py-3 px-8 rounded-xl font-bold shadow-lg transition-all ${Object.keys(errors || {}).length > 0 || !getValues('fotoDocumento') ? 'bg-gray-400 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700 text-white'}`} title={!getValues('fotoDocumento') ? 'Foto documento obrigatória' : 'Clique para enviar'}>
+{isSubmitting ? 'Enviando...' : Object.keys(errors || {}).length > 0 ? 'Corrija os erros acima' : 'Confirmar e Enviar Cadastro'}
                   </button>
                 </div>
               )}

@@ -5,23 +5,20 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs').promises;
+const AWS = require('aws-sdk');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Ensure uploads directory exists
-const UPLOAD_DIR = path.join(__dirname, 'uploads', 'ambulante_fotos');
-fs.mkdir(UPLOAD_DIR, { recursive: true }).catch(console.error);
-
-// Multer config for fotoDocumento (5MB max, images/pdf)
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, UPLOAD_DIR),
-  filename: (req, file, cb) => {
-    const uniqueName = `foto_${Date.now()}_${Math.round(Math.random() * 1e9)}${path.extname(file.originalname)}`;
-    cb(null, uniqueName);
-  }
+// AWS S3 Config
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  region: process.env.AWS_DEFAULT_REGION || 'sa-east-1'
 });
+
+// Multer memory storage for S3 upload (2MB max)
+const storage = multer.memoryStorage();
 
 const fileFilter = (req, file, cb) => {
 if ((file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mimetype === 'application/pdf')) {
@@ -33,7 +30,7 @@ if ((file.mimetype === 'image/jpeg' || file.mimetype === 'image/png' || file.mim
 
 const upload = multer({ 
   storage, 
-limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
+  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
   fileFilter 
 });
 
@@ -46,8 +43,7 @@ const allowedOrigins = process.env.NODE_ENV === 'production'
 app.use(cors({ 
   origin: allowedOrigins,
   credentials: true 
-}));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+})); // Removed local /uploads serving - S3 URLs now
 
 // Rate limiting
 const limiter = rateLimit({
@@ -79,7 +75,7 @@ app.get('/api/health', async (req, res) => {
     const connection = await pool.getConnection();
     await connection.ping();
     connection.release();
-    res.json({ status: 'OK', db: 'connected', uploads: UPLOAD_DIR });
+    res.json({ status: 'OK', db: 'connected', s3: !!process.env.AWS_BUCKET });
   } catch (err) {
     res.status(500).json({ error: 'DB unavailable', details: err.message });
   }
@@ -184,16 +180,29 @@ app.post('/api/cadastros', upload.single('fotoDocumento'), async (req, res) => {
 
       let photoUrl = null;
       if (file) {
-        // 2. Save photo metadata
+        // Generate filename (same logic)
+        const filename = `foto_${Date.now()}_${Math.round(Math.random() * 1e9)}${path.extname(file.originalname)}`;
+        const photoPath = `ambulante_fotos/${filename}`;
+        
+        // Upload to S3
+        const uploadParams = {
+          Bucket: process.env.AWS_BUCKET || 'cdn.keep',
+          Key: photoPath,
+          Body: file.buffer,
+          ContentType: file.mimetype,
+          ACL: 'public-read'
+        };
+        
+        const s3Result = await s3.upload(uploadParams).promise();
+        photoUrl = s3Result.Location;
+
+        // 2. Save photo metadata (store S3 path)
         const photoQuery = `
           INSERT INTO ambulante_foto (fk_ambulante, filename, path, original_name, size, mime_type)
           VALUES (?, ?, ?, ?, ?, ?)
         `;
-        const photoPath = path.join('uploads/ambulante_fotos', file.filename).replace(/\\/g, '/');
-        photoUrl = `/${photoPath}`;
-
         await connection.execute(photoQuery, [
-          ambulanteId, file.filename, photoPath, file.originalname, file.size, file.mimetype
+          ambulanteId, filename, photoPath, file.originalname, file.size, file.mimetype
         ]);
       }
 
@@ -240,6 +249,6 @@ app.get('*', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Backend rodando: http://localhost:${PORT}`);
   console.log(`📊 Health: http://localhost:${PORT}/api/health`);
-  console.log(`📁 Uploads: http://localhost:${PORT}/uploads`);
+  console.log(`☁️ S3 Bucket: ${process.env.AWS_BUCKET || 'not set'}`);
 });
 

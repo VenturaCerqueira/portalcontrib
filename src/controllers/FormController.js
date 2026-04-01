@@ -96,13 +96,14 @@ const nextStep = async () => {
   }
 
   
-  // Full validation only before review (step4)
+  // Full validation only before review (step4) - explicit foto check
   if (currentStep === 3) {
     const fullValid = await trigger();
-    console.log('✅ Full validation for review:', fullValid);
-    if (!fullValid) {
-      console.log('❌ Full FAILED before step4:', form.formState.errors);
-      alert('Complete todos os dados antes da revisão.');
+    const fotoDocumento = getValues('fotoDocumento');
+    console.log('✅ Full validation for review:', fullValid, 'Foto:', !!fotoDocumento);
+    if (!fullValid || !fotoDocumento) {
+      console.log('❌ Full FAILED before step4:', form.formState.errors, 'Missing foto:', !fotoDocumento);
+      alert(!fotoDocumento ? 'Foto documento obrigatória para continuar.' : 'Complete todos os dados antes da revisão.');
       return;
     }
   }
