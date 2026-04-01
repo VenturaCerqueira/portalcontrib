@@ -378,7 +378,15 @@ function App() {
                     Alterar Dados
                   </button>
                   <button type="submit" disabled={isSubmitting || Object.keys(errors || {}).length > 0 || !getValues('fotoDocumento')} className={`flex-1 py-3 px-8 rounded-xl font-bold shadow-lg transition-all ${Object.keys(errors || {}).length > 0 || !getValues('fotoDocumento') ? 'bg-gray-400 cursor-not-allowed' : 'bg-emerald-600 hover:bg-emerald-700 text-white'}`} title={!getValues('fotoDocumento') ? 'Foto documento obrigatória' : 'Clique para enviar'}>
-{isSubmitting ? 'Enviando...' : Object.keys(errors || {}).length > 0 ? 'Corrija os erros acima' : 'Confirmar e Enviar Cadastro'}
+{isSubmitting ? (
+  <>
+    <svg className="w-5 h-5 mr-2 animate-spin text-white flex-shrink-0" fill="none" viewBox="0 0 24 24">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    Salvando cadastro...
+  </>
+) : Object.keys(errors || {}).length > 0 ? 'Corrija os erros acima' : 'Confirmar e Enviar Cadastro'}
                   </button>
                 </div>
               )}
