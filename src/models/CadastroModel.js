@@ -103,10 +103,10 @@ celular: z.string().min(1, 'Celular obrigatório').regex(/^\(\d{2}\) ?9\d{4}-\d{
   empresaEndereco: z.string().optional(),
   empresaTel: z.string().optional(),
   cpfInformal: z.string()
-    .min(1, 'CPF Informal obrigatório')
+    .min(1, 'CPF Informal: Campo obrigatório')
     .transform(val => val.replace(/\D/g, ''))
-    .refine(raw => raw.length === 11, 'CPF Informal deve ter 11 dígitos')
-    .refine(isValidCPF, { message: 'CPF Informal inválido' }),
+    .refine(raw => raw.length === 11, { message: 'CPF Informal: Deve conter exatamente 11 dígitos' })
+    .refine(isValidCPF, { message: 'CPF Informal: Dígitos verificadores inválidos' }),
   cnpjMEI: z.string().optional(),
 meiNomeFantasia: z.string().optional(),
 fotoDocumento: z.instanceof(File, { message: 'Documento com foto obrigatório' })

@@ -205,10 +205,20 @@ app.post('/api/cadastros', upload.single('fotoDocumento'), async (req, res) => {
         };
         
         const s3Result = await s3Client.send(new PutObjectCommand(uploadParams));
-        photoUrl = s3Result.Location;
+        
+        // ✅ FIXED: Always use full constructed URL (reliable)
+        const region = process.env.AWS_REGION || 'sa-east-1';
+        const bucket = process.env.AWS_BUCKET;
+        photoUrl = s3Result.Location || `https://${bucket}.s3.${region}.amazonaws.com/${photoPath}`;
+        const fullS3Url = photoUrl;  // Now photoUrl is always full
 
-        // 🔧 DEBUG: Check why full URL not saving
-        const fullS3Url = photoUrl || `https://${process.env.AWS_BUCKET}.s3.${process.env.AWS_REGION || 'sa-east-1'}.amazonaws.com/${photoPath}`;
+        // 🔧 DEBUG
+        console.log('🔍 S3 DEBUG:', {
+          s3Location: s3Result.Location,
+          finalPhotoUrl: photoUrl,
+          bucket, region, photoPath,
+          usingS3Location: !!s3Result.Location
+        });
         console.log('🔍 S3 DEBUG:', {
           photoUrl, 
           bucket: process.env.AWS_BUCKET, 
@@ -219,6 +229,9 @@ app.post('/api/cadastros', upload.single('fotoDocumento'), async (req, res) => {
         });
 
         // 2. Save photo metadata (store FULL S3 URL in path)
+        // ✅ Log before DB save
+        console.log('💾 DB SAVING photo path:', fullS3Url.substring(0, 100) + (fullS3Url.length > 100 ? '...' : ''));
+        
         const photoQuery = `
           INSERT INTO ambulante_foto (fk_ambulante, filename, path, original_name, size, mime_type)
           VALUES (?, ?, ?, ?, ?, ?)

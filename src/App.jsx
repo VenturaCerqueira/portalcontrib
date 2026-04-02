@@ -180,7 +180,8 @@ function App() {
                   errors={errors} 
                   watch={watch} 
                   getValues={getValues} 
-                  setValue={setValue} 
+                  setValue={setValue}
+                  control={control}
                 />
               )}
               {/* Error Summary */}

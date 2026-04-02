@@ -50,9 +50,10 @@ export const useMask = (mask, initialValue = '', onValueChange = () => {}) => {
 // Masks for Brazilian formats
 export const masks = {
   cpf: '000.000.000-00',
+  cnpj: '00.000.000/0000-00',
   cep: '00000-000',
-  tel: '(00) 0000-0000',  // Fixed: 10 digits landline (area 2 + 8)
-  cel: '(00) 90000-0000', // 11 digits mobile (area 2 + 9 + 8)
+  tel: '(00) 0000-0000',  // landline
+  cel: '(00) 90000-0000', // mobile
   rg: '00.000.000-X',
   pis: '000.00000-00'
 };

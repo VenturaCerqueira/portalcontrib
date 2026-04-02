@@ -2,10 +2,13 @@ import React, { useEffect } from 'react';
 
 // import { Controller } from 'react-hook-form'; // Removed - using register instead
 
-import { useMask, masks } from '../hooks/useMask.jsx';
+import { Controller } from 'react-hook-form';
+import MaskedField from '../hooks/useInputMask.jsx';
+import { masks } from '../hooks/useMask.jsx';
+import { useMask } from '../hooks/useMask.jsx';
 
 
-const Step3Trabalho = ({ register, errors, watch, setValue }) => {
+const Step3Trabalho = ({ register, errors, watch, setValue, control }) => {
   const situacaoOcupacional = watch('situacaoOcupacional') || '';
   const cpfValue = watch('cpf') || '';
 
@@ -13,17 +16,14 @@ const Step3Trabalho = ({ register, errors, watch, setValue }) => {
   const isInformal = situacaoOcupacional === 'informal';
   const isMEI = situacaoOcupacional === 'mei';
 
+const unmaskCPF = (masked) => masked ? masked.replace(/\D/g, '') : '';
+
   useEffect(() => {
     if (isInformal && cpfValue) {
-      setValue('cpfInformal', cpfValue);
+      const rawCPF = unmaskCPF(cpfValue);
+      setValue('cpfInformal', rawCPF);
     }
   }, [isInformal, cpfValue, setValue]);
-
-
-
-
-
-
 
   return (
     <div className="space-y-6">
@@ -104,22 +104,29 @@ const Step3Trabalho = ({ register, errors, watch, setValue }) => {
           </div>
           <div className="lg:col-span-1">
             <label className="block text-sm font-semibold text-gray-700 mb-2">CNPJ da Empresa *</label>
-            <div className="relative">
-              <input 
-                {...register('cnpjEmpresa')} 
-                className={`w-full px-4 py-3 pr-10 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${
-                  errors?.cnpjEmpresa 
-                    ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
-                    : 'border-gray-300 hover:border-gray-400'
-                }`}
-                placeholder="00.000.000/0000-00"
-              />
-              {errors?.cnpjEmpresa && (
-                <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
-                </svg>
+            <Controller
+              name="cnpjEmpresa"
+              control={control}
+              render={({ field, fieldState: { error: fieldError } }) => (
+                <div className="relative">
+                  <MaskedField
+                    mask={masks.cnpj}
+                    field={field}
+                    className={`w-full px-4 py-3 pr-10 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${
+                      fieldError || errors?.cnpjEmpresa
+                        ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300'
+                        : 'border-gray-300 hover:border-gray-400'
+                    }`}
+                    placeholder="00.000.000/0000-00"
+                  />
+                  {(fieldError || errors?.cnpjEmpresa) && (
+                    <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                    </svg>
+                  )}
+                </div>
               )}
-            </div>
+            />
           </div>
           <div className="lg:col-span-1">
             <label className="block text-sm font-semibold text-gray-700 mb-2">Endereço da Empresa</label>
@@ -131,10 +138,19 @@ const Step3Trabalho = ({ register, errors, watch, setValue }) => {
           </div>
           <div className="lg:col-span-1">
             <label className="block text-sm font-semibold text-gray-700 mb-2">Telefone da Empresa</label>
-            <input 
-              {...register('empresaTel')} 
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
-              placeholder="(11) 99999-9999"
+            <Controller
+              name="empresaTel"
+              control={control}
+              render={({ field, fieldState: { error: fieldError } }) => (
+                <div className="relative">
+                  <MaskedField 
+                    mask={masks.tel}
+                    field={field}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 pr-10"
+                    placeholder="(00) 0000-0000"
+                  />
+                </div>
+              )}
             />
           </div>
         </>

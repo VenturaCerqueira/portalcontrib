@@ -95,9 +95,11 @@ const nextStep = async () => {
   const currentStepFields = getCurrentStepFields();
   let stepValid = await trigger(currentStepFields);
   if (currentStep === 3) {
+    const unmaskCPF = (masked) => masked ? masked.replace(/\D/g, '') : '';
     const values = getValues();
     if (values.situacaoOcupacional === 'informal' && values.cpf) {
-      setValue('cpfInformal', values.cpf);
+      const rawCPF = unmaskCPF(values.cpf);
+      setValue('cpfInformal', rawCPF);
       stepValid = await trigger(['cpfInformal', ...currentStepFields]);
     }
   }
