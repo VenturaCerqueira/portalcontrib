@@ -7,8 +7,11 @@ import IntroScreen from './components/IntroScreen';
 import Step1Pessoal from './components/Step1Pessoal';
 import Step2Atividade from './components/Step2Atividade';
 import Step3Trabalho from './components/Step3Trabalho';
+import NotificationSystem from './components/NotificationSystem';
 import { getEstadoCivilOptions, getSexoOptions, getTipoLocalAtividadeOptions } from './models/CadastroModel.js';
 import { useFormController } from './controllers/FormController.js';
+
+
 
 const ESTADO_CIVIL = getEstadoCivilOptions();
 const SEXO_OPCOES = getSexoOptions();
@@ -27,6 +30,9 @@ function App() {
     prevStep,
     onSubmit,
     isSubmitting,
+    notifications,
+    addNotification,
+    removeNotification,
     stepErrors,
     isStepValid,
     register,
@@ -395,6 +401,7 @@ function App() {
         </div>
       </main>
       <Footer />
+      <NotificationSystem notifications={notifications} onRemove={removeNotification} />
     </div>     
   );
 }

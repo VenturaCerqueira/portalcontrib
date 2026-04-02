@@ -330,6 +330,8 @@ accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf"
                         const selectedFile = e.target.files?.[0];
                         if (selectedFile) {
                           field.onChange(selectedFile);
+                          // Trigger global validation to show toast for file size/format errors
+                          trigger('fotoDocumento');
                         }
                       }}
                       className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 border-gray-300 hover:border-gray-400"
@@ -349,7 +351,14 @@ accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf"
                         <p className="text-xs text-gray-500 mt-2 text-center truncate">{file.name}</p>
                       </div>
                     )}
-                    {error && <p className="mt-2 text-sm text-red-600">{error.message}</p>}
+{error && (
+  <span className="mt-2 inline-flex items-center px-3 py-1.5 rounded-full text-xs font-medium bg-red-100 text-red-800 border border-red-200 shadow-sm hover:shadow-md transition-all duration-200 animate-pulse group">
+    <svg className="w-3.5 h-3.5 mr-1.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+    </svg>
+    {error.message}
+  </span>
+)}
                   </div>
                 );
               }}
