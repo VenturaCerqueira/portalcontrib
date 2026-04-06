@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { UserGroupIcon, MapPinIcon } from '@heroicons/react/24/outline';
+import { UserGroupIcon, MapPinIcon, UserIcon, IdentificationIcon, EnvelopeIcon, PhoneIcon, CalendarIcon, PhotoIcon, HomeIcon, BuildingOfficeIcon } from '@heroicons/react/24/outline';
 import { Controller } from 'react-hook-form';
 
 import { useMask, masks } from '../hooks/useMask.jsx';
@@ -79,10 +79,11 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
               render={({ field, fieldState: { error: fieldError } }) => (
                 <div className="space-y-1">
                   <div className="relative">
+                    <IdentificationIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
                     <MaskedField 
                       mask={masks.cpf}
                       field={field}
-                      className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all duration-200 pr-10 ${
+                      className={`w-full pl-11 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all duration-200 pr-10 ${
                         fieldError || cpfError 
                           ? 'border-red-500 ring-red-200' 
                           : cpfWarning 
@@ -93,6 +94,7 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
                       }`}
                       placeholder="000.000.000-00"
                     />
+
                     {cpfValid && !cpfWarning && (
                       <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -117,15 +119,17 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Nome Completo *</label>
             <div className="relative">
+              <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
               <input
                 {...register('nome')}
-                className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                className={`w-full pl-11 px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
                   errors?.nome 
                     ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
                     : 'border-gray-300 hover:border-gray-400'
                 }`}
                 placeholder="Digite o nome completo"
               />
+
               {errors?.nome && (
                 <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
@@ -148,14 +152,16 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
               render={({ field, fieldState: { error } }) => (
                 <div className="space-y-1">
                   <div className="relative">
+                    <CalendarIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
                     <input
                       type="date"
                       {...field}
-                      className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                      className={`w-full pl-11 px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
                         error 
                           ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
                           : 'border-gray-300 hover:border-gray-400'
                       }`}
+
                       max={(() => {
                         const today = new Date();
                         today.setHours(23, 59, 59, 999);
@@ -176,24 +182,27 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Sexo *</label>
-            <select
-              {...register('sexo')}
-              className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
-                errors?.sexo 
-                  ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
-                  : 'border-gray-300 hover:border-gray-400'
-              }`}
-            >
-              <option value="">Selecione...</option>
-              {SEXO_OPCOES.map((op) => (
-                <option key={op.value} value={op.value}>{op.label}</option>
-              ))}
-            </select>
-            {errors?.sexo && (
-              <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
-              </svg>
-            )}
+            <div className="relative">
+              <select
+                {...register('sexo')}
+                className={`w-full pl-11 px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                  errors?.sexo 
+                    ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
+                    : 'border-gray-300 hover:border-gray-400'
+                }`}
+              >
+                <option value="">Selecione...</option>
+                {SEXO_OPCOES.map((op) => (
+                  <option key={op.value} value={op.value}>{op.label}</option>
+                ))}
+              </select>
+              <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
+              {errors?.sexo && (
+                <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                </svg>
+              )}
+            </div>
             {errors?.sexo?.message && <p className="mt-1 text-sm text-red-600">{errors?.sexo?.message}</p>}
           </div>
         </div>
@@ -202,9 +211,10 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Estado Civil <span className="text-red-500">*</span></label>
             <div className="relative">
+              <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
               <select
                 {...register('estadoCivil')}
-                className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                className={`w-full pl-11 px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
                 errors?.estadoCivil 
                   ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
                   : 'border-gray-300 hover:border-gray-400'
@@ -236,14 +246,18 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
               }}
               render={({ field, fieldState: { error } }) => (
                 <div className="space-y-1">
-                  <input
+                  <div className="relative">
+                    <EnvelopeIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
+                    <input
                     type="email"
                     {...field}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                    className={`w-full pl-11 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
                       error ? 'border-red-500 ring-red-200' : 'border-gray-300'
                     }`}
                     placeholder="exemplo@dominio.com"
                     />
+                  </div>
+
                   {error && <p className="mt-1 text-sm text-red-600">{error.message}</p>}
                 </div>
               )}
@@ -259,12 +273,14 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
               render={({ field, fieldState: { error } }) => (
                 <div className="space-y-1">
                   <div className="relative">
+                    <PhoneIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
                     <MaskedField
                       mask={masks.cel}
                       field={field}
-                      className="w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 border-gray-300 hover:border-gray-400"
+                      className="w-full pl-11 px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 border-gray-300 hover:border-gray-400"
                       placeholder="(00) 90000-0000"
                     />
+
                   </div>
                 </div>
               )}
@@ -283,17 +299,19 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
               }}
               render={({ field, fieldState: { error: fieldError } }) => (
                 <div className="space-y-1">
-                  <div className="relative">
+                    <div className="relative">
+                    <PhoneIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
                     <MaskedField 
                       mask={masks.tel}
                       field={field}
-                      className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all duration-200 ${
+                      className={`w-full pl-11 px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition-all duration-200 ${
                         fieldError 
                           ? 'border-red-500 ring-red-200' 
                           : 'border-gray-300 hover:border-gray-400'
                       }`}
                       placeholder="(00) 0000-0000"
                     />
+
                     {fieldError && (
                       <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
@@ -381,17 +399,19 @@ accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf"
               }}
               render={({ field, fieldState: { error } }) => (
                 <div className="space-y-1">
-                  <div className="relative">
+                    <div className="relative">
+                    <IdentificationIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
                     <MaskedField
                       mask={masks.rg}
                       field={field}
-                      className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                      className={`w-full pl-11 px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
                         error 
                           ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
                           : 'border-gray-300 hover:border-gray-400'
                       }`}
                       placeholder="00.000.000-X"
                     />
+
                     {error && (
                       <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
@@ -418,10 +438,11 @@ accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf"
               render={({ field, fieldState: { error } }) => (
                 <div className="space-y-1">
                   <div className="relative">
+                    <IdentificationIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
                     <MaskedField
                       mask={masks.pis}
                       field={field}
-                      className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
+                      className={`w-full pl-11 px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ${
                         error 
                           ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
                           : 'border-gray-300 hover:border-gray-400'
@@ -465,33 +486,36 @@ accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf"
                   }
                 }}
                 render={({ field, fieldState: { error } }) => (
-                  <div className="relative">
-                    <MaskedField
-                      mask={masks.cep}
-                      field={field}
-                      className={`w-full pl-10 pr-12 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 hover:border-orange-300 group pr-10 ${
-                        (error || cepError) ? 'border-red-500 ring-1 ring-red-200' : 'border-gray-300 hover:border-orange-300'
-                      }`}
-                      placeholder="00000-000"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleCepManual}
-                      disabled={isLoadingCep}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 bg-white border-l border-gray-200 hover:bg-orange-50 p-2 rounded-r-lg shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group-hover:bg-orange-50"
-                      title="Buscar endereço por CEP"
-                    >
-                      {isLoadingCep ? (
-                        <svg className="w-4 h-4 text-orange-500 animate-spin" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                      ) : (
-                        <svg className="w-4 h-4 text-gray-400 group-hover:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                      )}
-                    </button>
+                  <div className="space-y-1">
+                    <div className="relative">
+                      <MapPinIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
+                      <MaskedField
+                        mask={masks.cep}
+                        field={field}
+                        className={`w-full pl-11 pr-20 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 hover:border-orange-300 group ${
+                          (error || cepError) ? 'border-red-500 ring-1 ring-red-200' : 'border-gray-300 hover:border-orange-300'
+                        }`}
+                        placeholder="00000-000"
+                      />
+                      <button
+                        type="button"
+                        onClick={handleCepManual}
+                        disabled={isLoadingCep}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 bg-white border-l border-gray-200 hover:bg-orange-50 p-2 rounded-r-lg shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed group-hover:bg-orange-50"
+                        title="Buscar endereço por CEP"
+                      >
+                        {isLoadingCep ? (
+                          <svg className="w-4 h-4 text-orange-500 animate-spin" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
+                        ) : (
+                          <svg className="w-4 h-4 text-gray-400 group-hover:text-orange-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                          </svg>
+                        )}
+                      </button>
+                    </div>
                   </div>
                 )}
               />
@@ -503,9 +527,10 @@ accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf"
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Logradouro *</label>
             <div className="relative">
+              <HomeIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
               <input
                 {...register('logradouro')}
-                className={`w-full px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 ${
+                className={`w-full pl-11 px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 ${
                   errors?.logradouro 
                     ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
                     : 'border-gray-300 hover:border-gray-400'
@@ -523,13 +548,21 @@ accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf"
 
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2 text-orange-900">Nº da residência <span className="text-red-500">*</span></label>
-            <input
-              {...register('endereco')}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors ${
-                errors?.endereco ? 'border-red-500 ring-2 ring-red-200 animate-pulse' : 'border-gray-300'
-              }`}
-              placeholder="Ex: 123, Apto 45, s/n, Qd 12 Lote 5"
-            />
+            <div className="relative">
+              <HomeIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
+              <input
+                {...register('endereco')}
+                className={`w-full pl-11 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 ${
+                  errors?.endereco ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 animate-pulse focus:ring-red-300' : 'border-gray-300 hover:border-gray-400'
+                }`}
+                placeholder="Ex: 123, Apto 45, s/n, Qd 12 Lote 5"
+              />
+              {errors?.endereco && (
+                <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                </svg>
+              )}
+            </div>
             {errors?.endereco?.message && <p className="mt-1 text-sm text-red-600 font-medium">{errors?.endereco?.message}</p>}
             <p className="text-xs text-gray-500 mt-1 italic">Após buscar o CEP, preencha o número da casa/apartamento. Use s/n se não tiver número.</p>
           </div>
@@ -537,34 +570,48 @@ accept=".pdf,.jpg,.jpeg,.png,image/jpeg,image/png,application/pdf"
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Bairro *</label>
-            <input
-              {...register('bairro')}
-              className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors ${
-                errors?.bairro ? 'border-red-500' : 'border-gray-300'
-              }`}
-              placeholder="Centro, Vila Nova, etc."
-            />
+            <div className="relative">
+              <BuildingOfficeIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
+              <input
+                {...register('bairro')}
+                className={`w-full pl-11 px-3 py-2 pr-10 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 ${
+                  errors?.bairro ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' : 'border-gray-300 hover:border-gray-400'
+                }`}
+                placeholder="Centro, Vila Nova, etc."
+              />
+              {errors?.bairro && (
+                <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                </svg>
+              )}
+            </div>
             {errors?.bairro?.message && <p className="mt-1 text-sm text-red-600">{errors?.bairro?.message}</p>}
           </div>
 
           <div className="md:col-span-2 grid md:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Município</label>
+            <div className="relative">
+              <BuildingOfficeIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
               <input
                 {...register('municipio')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-colors"
-                placeholder=""
+                className="w-full pl-11 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 hover:border-gray-400"
+                placeholder="São Paulo, Rio de Janeiro, etc."
               />
+            </div>
               {errors?.municipio?.message && <p className="mt-1 text-sm text-red-600">{errors?.municipio?.message}</p>}
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">UF</label>
+            <div className="relative">
+              <MapPinIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
               <input
                 {...register('uf')}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 uppercase tracking-wider font-mono"
-                placeholder=""
+                className="w-full pl-11 px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 uppercase tracking-wider font-mono transition-all duration-200 hover:border-gray-400"
+                placeholder="SP"
                 maxLength="2"
               />
+            </div>
             </div>
           </div>
         </div>

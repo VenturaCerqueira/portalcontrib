@@ -3,11 +3,11 @@ import React from 'react'
 
 const IntroScreen = ({ onStart }) => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col max-h-screen overflow-hidden">
       {/* Hero Background - Header colors */}
       <div className="absolute inset-0 bg-gray-50/80 dark:bg-slate-900/80"></div>
       
-      <main className="relative z-10 flex-1 flex items-center justify-center px-4 py-12 sm:py-16">
+      <main className="relative z-10 flex flex-col items-center justify-center px-4 py-12 sm:py-16 h-full overflow-y-auto">
         <div className="max-w-4xl w-full mx-auto text-center">
           {/* Circular Modern Business Logo - EXATAMENTE ACIMA do Portal Oficial */}
           <div className="animate-in slide-in-from-top-4 fade-in duration-1000 mb-8 px-4 flex justify-center">

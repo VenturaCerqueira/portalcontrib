@@ -249,11 +249,8 @@ function App() {
                       {/* 2. ENDEREÇO */}
                       <section className="bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/20 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-6 shadow-md">
                         <div className="flex items-center justify-between mb-4">
-                          <h4 className="text-lg font-bold text-emerald-900 dark:text-emerald-100 flex items-center">
-                            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
+<h4 className="text-lg font-bold text-emerald-900 dark:text-emerald-100 flex items-center">
+                            <MapPinIcon className="w-5 h-5 mr-2 text-emerald-600" />
                             Endereço Residencial
                           </h4>
                           <button type="button" onClick={() => setCurrentStep(1)} className="text-emerald-600 hover:text-emerald-800 font-medium text-sm px-3 py-1 bg-emerald-100 hover:bg-emerald-200 rounded-lg transition-all">

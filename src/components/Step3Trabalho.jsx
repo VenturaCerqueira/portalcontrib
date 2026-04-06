@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 // import { Controller } from 'react-hook-form'; // Removed - using register instead
 
 import { Controller } from 'react-hook-form';
+import { BriefcaseIcon, BuildingOfficeIcon, MapPinIcon, PhoneIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import MaskedField from '../hooks/useInputMask.jsx';
 import { masks } from '../hooks/useMask.jsx';
 import { useMask } from '../hooks/useMask.jsx';
@@ -42,30 +43,33 @@ const unmaskCPF = (masked) => masked ? masked.replace(/\D/g, '') : '';
               type="radio" 
               value="funcionario" 
               {...register('situacaoOcupacional', { required: 'Selecione sua situação ocupacional' })} 
-              className="mr-3 text-teal-600 dark:text-teal-400 w-5 h-5"
+              className="mr-2 text-teal-600 dark:text-teal-400 w-5 h-5"
               autoComplete="off"
             />
+            <BriefcaseIcon className="w-5 h-5 mr-3 text-teal-600 flex-shrink-0" />
             <span className="font-medium text-gray-900 dark:text-slate-100 group-hover:text-teal-600 dark:group-hover:text-teal-400">Funcionário(a) de Empresa</span>
           </label>
           <label className={`flex items-center p-4 border-2 rounded-xl hover:shadow-md transition-all cursor-pointer group ${errors?.situacaoOcupacional ? 'border-red-400 bg-red-50/50 dark:bg-red-900/20' : 'border-gray-200 hover:border-teal-300 hover:shadow-md'}`}>
-              <input 
+            <input 
               type="radio" 
               value="informal" 
               {...register('situacaoOcupacional')} 
-              className="mr-3 text-teal-600 w-5 h-5"
+              className="mr-2 text-teal-600 w-5 h-5"
               autoComplete="off"
             />
-            <span className="font-medium text-gray-900 group-hover:text-teal-600">Trabalhador Informal</span>
+            <UserGroupIcon className="w-5 h-5 mr-3 text-teal-600 flex-shrink-0" />
+            <span className="font-medium text-gray-900 group-hover:text-teal-600 dark:text-slate-100">Trabalhador Informal</span>
           </label>
           <label className={`flex items-center p-4 border-2 rounded-xl hover:shadow-md transition-all cursor-pointer group ${errors?.situacaoOcupacional ? 'border-red-400 bg-red-50/50 dark:bg-red-900/20' : 'border-gray-200 hover:border-teal-300 hover:shadow-md'}`}>
-              <input 
+            <input 
               type="radio" 
               value="mei" 
               {...register('situacaoOcupacional', { required: 'Selecione sua situação ocupacional' })} 
-              className="mr-3 text-teal-600 w-5 h-5"
+              className="mr-2 text-teal-600 w-5 h-5"
               autoComplete="off"
             />
-            <span className="font-medium text-gray-900 group-hover:text-teal-600">MEI</span>
+            <BuildingOfficeIcon className="w-5 h-5 mr-3 text-teal-600 flex-shrink-0" />
+            <span className="font-medium text-gray-900 group-hover:text-teal-600 dark:text-slate-100">MEI</span>
           </label>
         </div>
         {errors?.situacaoOcupacional && (
@@ -85,16 +89,19 @@ const unmaskCPF = (masked) => masked ? masked.replace(/\D/g, '') : '';
           <div className="lg:col-span-1">
             <label className="block text-sm font-semibold text-gray-700 mb-2">Nome da Empresa *</label>
             <div className="relative">
-              <input 
-                autoComplete="off"
-                {...register('empresaNome')} 
-                className={`w-full px-4 py-3 pr-10 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${
-                  errors?.empresaNome 
-                    ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
-                    : 'border-gray-300 hover:border-gray-400'
-                }`}
-                placeholder="Nome da empresa empregadora"
-              />
+              <div className="relative">
+                <BuildingOfficeIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none flex-shrink-0" />
+                <input 
+                  autoComplete="off"
+                  {...register('empresaNome')} 
+                  className={`w-full pl-11 px-4 py-3 pr-10 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${
+                    errors?.empresaNome 
+                      ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
+                      : 'border-gray-300 hover:border-gray-400'
+                  }`}
+                  placeholder="Nome da empresa empregadora"
+                />
+              </div>
               {errors?.empresaNome && (
                 <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
