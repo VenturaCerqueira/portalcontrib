@@ -159,7 +159,7 @@ const nextStep = async () => {
       setShowSuccess(true);
       // Don't reset - show success first
     } catch (error) {
-      addNotification('error', 'Erro no envio', `${error.message} (Backend/DB OK? Health: localhost:3001/api/health)`);
+      addNotification('error', 'Erro no envio', 'CPF já cadastrado');
     } finally {
       setIsSubmitting(false);
     }

@@ -1,7 +1,15 @@
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 
+import useTypewriter from '../hooks/useTypewriter.js'
+
 const IntroScreen = ({ onStart }) => {
+  const { displayText, cursorVisible } = useTypewriter({
+    text: 'PREFEITURA DE RIACHÃO DO JACUÍPE',
+    speed: 120,
+    loop: false,
+    delayStart: 1500
+  });
   return (
     <div className="min-h-screen flex flex-col max-h-screen overflow-hidden">
       {/* Hero Background - Header colors */}
@@ -30,7 +38,8 @@ const IntroScreen = ({ onStart }) => {
           <div className="animate-in slide-in-from-top-8 fade-in duration-1000 mb-6">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight tracking-tight bg-gradient-to-r from-[#0052cc] to-blue-600 bg-clip-text text-transparent mb-4">
               <span className="block font-light text-base sm:text-lg md:text-xl text-[#0052cc]/80 dark:text-blue-400 mb-1">Portal Oficial</span>
-              PREFEITURA DE RIACHÃO DO JACUÍPE
+              <span className="font-bold bg-gradient-to-r from-[#0052cc] to-blue-600 bg-clip-text text-transparent min-w-[20rem] inline-block">{displayText}</span>
+{cursorVisible && <span className="font-bold bg-gradient-to-r from-[#0052cc] to-blue-600 bg-clip-text text-transparent animate-pulse">|</span>}
               <br className="sm:hidden" />
               <span className="block text-sm sm:text-base md:text-lg text-slate-700 dark:text-slate-200 font-semibold">Credenciamento de Ambulantes</span>
             </h1>
