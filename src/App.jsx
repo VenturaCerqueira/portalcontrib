@@ -102,7 +102,7 @@ function App() {
     return (
       <div className="flex flex-col min-h-screen">
         <Header />
-        <main className="flex-1 pt-20 md:pt-24 lg:pt-28 px-4 md:px-8 lg:px-12 flex items-center justify-center">
+        <main className="flex-1 pt-28 md:pt-32 lg:pt-36 px-4 md:px-8 lg:px-12 flex items-center justify-center">
           <div className="max-w-2xl w-full mx-auto bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 border border-emerald-200 dark:border-emerald-800 rounded-3xl shadow-2xl p-12 text-center">
             <div className="w-24 h-24 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
               <svg className="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,7 +138,7 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-1 pt-20 md:pt-24 lg:pt-28 px-4 md:px-8 lg:px-12">
+      <main className="flex-1 pt-28 md:pt-32 lg:pt-36 px-4 md:px-8 lg:px-12">
         <div className="max-w-6xl mx-auto pb-12 md:pb-16 lg:pb-20">
           <div className="bg-white dark:bg-slate-800/95 border border-gray-200 dark:border-slate-700 rounded-3xl shadow-xl dark:shadow-2xl p-8 md:p-12">
             <ProgressBar currentStep={currentStep} />
