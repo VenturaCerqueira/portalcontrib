@@ -102,11 +102,10 @@ celular: z.string().min(1, 'Celular obrigatório').regex(/^\(\d{2}\) ?9\d{4}-\d{
   cnpjEmpresa: z.string().optional(),
   empresaEndereco: z.string().optional(),
   empresaTel: z.string().optional(),
-  cpfInformal: z.string()
-    .min(1, 'CPF Informal: Campo obrigatório')
-    .transform(val => val.replace(/\D/g, ''))
-    .refine(raw => raw.length === 11, { message: 'CPF Informal: Deve conter exatamente 11 dígitos' })
-    .refine(isValidCPF, { message: 'CPF Informal: Dígitos verificadores inválidos' }),
+  cpfInformal: z.string().optional()
+    .transform(val => val ? val.replace(/\D/g, '') : '')
+    .refine(val => !val || val.length === 11, { message: 'CPF Informal: Deve conter exatamente 11 dígitos' })
+    .refine(val => !val || isValidCPF(val), { message: 'CPF Informal: Dígitos verificadores inválidos' }),
   cnpjMEI: z.string().optional(),
 meiNomeFantasia: z.string().optional(),
 fotoDocumento: z.instanceof(File, { message: 'Documento com foto obrigatório' })
@@ -119,7 +118,7 @@ fotoDocumento: z.instanceof(File, { message: 'Documento com foto obrigatório' }
     if (!data.cnpjEmpresa) ctx.addIssue({ code: 'custom', message: 'CNPJ da empresa obrigatório', path: ['cnpjEmpresa'] });
   }
   if (data.situacaoOcupacional === 'informal') {
-    // cpfInformal validation handled by schema.min(1) + superRefine conditional check
+    if (!data.cpfInformal || data.cpfInformal.length < 11) ctx.addIssue({ code: 'custom', message: 'CPF Informal obrigatório', path: ['cpfInformal'] });
   }
   if (data.situacaoOcupacional === 'mei') {
     if (!data.cnpjMEI) ctx.addIssue({ code: 'custom', message: 'CNPJ/MEI obrigatório', path: ['cnpjMEI'] });

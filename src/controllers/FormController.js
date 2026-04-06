@@ -72,7 +72,7 @@ const { register, handleSubmit, formState: { errors }, control, reset, trigger, 
   const stepFieldsMap = {
 1: ['nome','cpf','dataNascimento','sexo','estadoCivil','celular','logradouro','endereco','bairro','cep','fotoDocumento'],
     2: ['tipoLocalAtividade','principaisProdutos','localNegocio','jaTrabalhaPrefeituraEventos'],
-    3: ['situacaoOcupacional', 'empresaNome', 'cnpjEmpresa', 'cnpjMEI', 'meiNomeFantasia', 'cpfInformal', 'fotoDocumento']
+    3: ['situacaoOcupacional', 'empresaNome', 'cnpjEmpresa', 'cnpjMEI', 'meiNomeFantasia']
   };
 
   const getCurrentStepFields = () => stepFieldsMap[currentStep] || [];
