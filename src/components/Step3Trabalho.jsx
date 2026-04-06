@@ -202,22 +202,36 @@ const unmaskCPF = (masked) => masked ? masked.replace(/\D/g, '') : '';
           <h4 className="lg:col-span-3 text-lg font-semibold text-gray-800 mb-4">Dados do MEI</h4>
           <div className="lg:col-span-1">
             <label className="block text-sm font-semibold text-gray-700 mb-2">CNPJ / MEI *</label>
-            <div className="relative">
-              <input 
-                {...register('cnpjMEI')} 
-                className={`w-full px-4 py-3 pr-10 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${
-                  errors?.cnpjMEI 
-                    ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300' 
-                    : 'border-gray-300 hover:border-gray-400'
-                }`}
-                placeholder="00.000.000/0000-00"
-              />
-              {errors?.cnpjMEI && (
-                <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
-                </svg>
+            <Controller
+              name="cnpjMEI"
+              control={control}
+              rules={{
+                required: 'CNPJ/MEI é obrigatório',
+                validate: (value) => {
+                  const raw = value.replace(/\D/g, '');
+                  return raw.length === 14 && isValidCNPJ(raw) || 'CNPJ/MEI inválido';
+                }
+              }}
+              render={({ field, fieldState: { error: fieldError } }) => (
+                <div className="relative">
+                  <MaskedField
+                    mask={masks.cnpj}
+                    field={field}
+                    className={`w-full px-4 py-3 pr-10 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${
+                      fieldError || errors?.cnpjMEI
+                        ? 'border-red-500 ring-2 ring-red-200/50 bg-red-50/50 dark:bg-red-900/20 dark:border-red-500 dark:ring-red-800/50 animate-pulse focus:ring-red-300'
+                        : 'border-gray-300 hover:border-gray-400'
+                    }`}
+                    placeholder="00.000.000/0000-00"
+                  />
+                  {(fieldError || errors?.cnpjMEI) && (
+                    <svg className="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 text-red-500 pointer-events-none flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor"/>
+                    </svg>
+                  )}
+                </div>
               )}
-            </div>
+            />
           </div>
           <div className="lg:col-span-2">
             <label className="block text-sm font-semibold text-gray-700 mb-2">Nome Fantasia *</label>
