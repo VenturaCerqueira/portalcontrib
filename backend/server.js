@@ -152,7 +152,12 @@ app.get('/api/check-ambulante/:cpf', async (req, res) => {
     }
 
     const query = `
-      SELECT id, nome, celular, created_at, situacao
+      SELECT 
+        id, nome, rg, nit, sexo, dataNascimento, estadoCivil, email, telContato, celular,
+        cep, logradouro, endereco, bairro, municipio, uf,
+        situacaoOcupacional, tipoLocalAtividade, principaisProdutos, localNegocio, 
+        jaTrabalhaPrefeituraEventos, empresaNome, cnpjEmpresa, meiNomeFantasia,
+        created_at, situacao
       FROM ambulante 
       WHERE cpf = ? AND situacao = 1 
       LIMIT 1

@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { ArrowLeftIcon, MagnifyingGlassIcon, CheckCircleIcon, XMarkIcon, UserPlusIcon } from '@heroicons/react/24/outline';
 import ApiService from '../models/ApiService.js';
+import { getEstadoCivilOptions, getSexoOptions, getTipoLocalAtividadeOptions } from '../models/CadastroModel.js';
 import { masks } from '../hooks/useMask.jsx';
 
 const ConsultaScreen = ({ onBackToIntro, onStartCadastro }) => {
@@ -70,8 +71,37 @@ const ConsultaScreen = ({ onBackToIntro, onStartCadastro }) => {
     }
   };
 
+  const ESTADO_CIVIL = getEstadoCivilOptions();
+  const SEXO_OPCOES = getSexoOptions();
+  const TIPO_LOCAL_OPCOES = getTipoLocalAtividadeOptions();
+
+  const getEnumLabel = (value, options) => {
+    const opt = options.find(o => o.value === value);
+    return opt ? opt.label : value || '---';
+  };
+
+  const maskEmail = (email) => {
+    if (!email) return '---';
+    const [user, domain] = email.split('@');
+    if (!domain) return email;
+    const maskedUser = user.length > 1 ? user[0] + '*'.repeat(user.length - 2) + user.slice(-1) : user;
+    const [domainName, tld] = domain.split('.');
+    const maskedDomain = domainName.length > 1 ? domainName[0] + '*'.repeat(domainName.length - 2) + domainName.slice(-1) : domainName;
+    return `${maskedUser}@${maskedDomain}.${tld}`;
+  };
+
+  const maskAddress = (addr) => {
+    if (!addr) return '---';
+    return addr.length > 5 ? addr.substring(0, 3) + '*'.repeat(Math.min(10, addr.length - 6)) + addr.slice(-2) : addr;
+  };
+
+  const maskProducts = (prod) => {
+    if (!prod) return '---';
+    return (prod.length > 50 ? prod.substring(0, 47) + '...' : prod).replace(/./g, (c, i) => i > 20 && i < prod.length - 20 ? '*' : c);
+  };
+
   const formatDate = (dateStr) => {
-    return new Date(dateStr).toLocaleDateString('pt-BR');
+    return dateStr ? new Date(dateStr).toLocaleDateString('pt-BR') : '---';
   };
 
   return (
@@ -142,42 +172,87 @@ const ConsultaScreen = ({ onBackToIntro, onStartCadastro }) => {
           </div>
         )}
 
-        {result && (
+{result && (
           <div className={`p-6 rounded-2xl shadow-lg border-4 ${result.found ? 'bg-emerald-50 border-emerald-200' : 'bg-amber-50 border-amber-200'}`}>
             {result.found ? (
               <>
-                <div className="flex items-center justify-center mb-4">
-                  <CheckCircleIcon className="w-12 h-12 text-emerald-500" />
+                <div className="flex items-center justify-center mb-6">
+                  <CheckCircleIcon className="w-16 h-16 text-emerald-500" />
                 </div>
-                <h3 className="text-lg font-bold text-emerald-900 text-center mb-3"> Cadastro Encontrado!</h3>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between items-center">
-                    <span className="flex items-center">
-                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <h3 className="text-2xl font-bold text-emerald-900 text-center mb-6">✅ Cadastro Encontrado!</h3>
+                <div className="space-y-4 text-sm max-h-96 overflow-y-auto">
+                  
+                  {/* ID & Data */}
+                  <div className="grid grid-cols-2 gap-4 p-4 bg-emerald-100/50 rounded-xl">
+                    <div className="flex justify-between">
+                      <span>ID:</span>
+                      <span className="font-mono font-bold text-emerald-800">#{result.data.id}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Criado em:</span>
+                      <span className="font-semibold">{formatDate(result.data.created_at)}</span>
+                    </div>
+                  </div>
+
+                  {/* PESSOAL */}
+                  <div className="bg-white/70 p-4 rounded-xl border">
+                    <h4 className="font-bold text-slate-800 mb-3 flex items-center">
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                       </svg>
-                      Nome:
-                    </span>
-                    <span className="font-semibold">{maskName(result.data.nome)}</span>
+                      Dados Pessoais
+                    </h4>
+                    <div className="grid grid-cols-1 gap-2">
+                      <div className="flex justify-between"><span>Nome:</span><span className="font-semibold">{maskName(result.data.nome)}</span></div>
+                      <div className="flex justify-between"><span>RG:</span><span>{result.data.rg || '---'}</span></div>
+                      <div className="flex justify-between"><span>NIT:</span><span>{result.data.nit || '---'}</span></div>
+                      <div className="flex justify-between"><span>Sexo:</span><span>{getEnumLabel(result.data.sexo, SEXO_OPCOES)}</span></div>
+                      <div className="flex justify-between"><span>Data Nasc:</span><span>{formatDate(result.data.dataNascimento)}</span></div>
+                      <div className="flex justify-between"><span>Est. Civil:</span><span>{getEnumLabel(result.data.estadoCivil, ESTADO_CIVIL)}</span></div>
+                      <div className="flex justify-between"><span>Email:</span><span>{maskEmail(result.data.email)}</span></div>
+                      <div className="flex justify-between"><span>Celular:</span><span>{maskCelular(result.data.celular)}</span></div>
+                      {result.data.telContato && <div className="flex justify-between"><span>Tel:</span><span>{maskCelular(result.data.telContato)}</span></div>}
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="flex items-center">
-                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 01 1.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+
+                  {/* ENDEREÇO */}
+                  <div className="bg-white/70 p-4 rounded-xl border">
+                    <h4 className="font-bold text-slate-800 mb-3 flex items-center">
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                       </svg>
-                      Celular:
-                    </span>
-                    <span>{maskCelular(result.data.celular)}</span>
+                      Endereço
+                    </h4>
+                    <div className="grid grid-cols-1 gap-2">
+                      <div className="flex justify-between"><span>CEP:</span><span>{result.data.cep || '---'}</span></div>
+                      <div className="flex justify-between"><span>Logradouro:</span><span>{maskAddress(result.data.logradouro)}</span></div>
+                      <div className="flex justify-between"><span>Endereço:</span><span>{maskAddress(result.data.endereco)}</span></div>
+                      <div className="flex justify-between"><span>Bairro:</span><span>{maskAddress(result.data.bairro)}</span></div>
+                      <div className="flex justify-between"><span>Município:</span><span>{result.data.municipio || '---'}</span></div>
+                      <div className="flex justify-between"><span>UF:</span><span>{result.data.uf || '---'}</span></div>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="flex items-center">
-                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+
+                  {/* ATIVIDADE & OCUPACIONAL */}
+                  <div className="bg-white/70 p-4 rounded-xl border">
+                    <h4 className="font-bold text-slate-800 mb-3 flex items-center">
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9  Asc 1.8em"/>
                       </svg>
-                      Data:
-                    </span>
-                    <span className="text-emerald-700 font-semibold">{formatDate(result.data.created_at)}</span>
+                      Atividade Profissional
+                    </h4>
+                    <div className="grid grid-cols-1 gap-2">
+                      <div className="flex justify-between"><span>Situação:</span><span>{result.data.situacaoOcupacional || '---'}</span></div>
+                      <div className="flex justify-between"><span>Tipo Local:</span><span>{getEnumLabel(result.data.tipoLocalAtividade, TIPO_LOCAL_OPCOES)}</span></div>
+                      <div className="flex justify-between"><span>Local Negócio:</span><span>{result.data.localNegocio === 'fixo' ? 'Fixo' : 'Móvel'}</span></div>
+                      <div className="flex justify-between"><span>Prefeitura:</span><span>{result.data.jaTrabalhaPrefeituraEventos === 'sim' ? 'Sim' : 'Não'}</span></div>
+                      <div className="flex justify-between"><span>Produtos:</span><span className="break-words max-w-xs">{maskProducts(result.data.principaisProdutos)}</span></div>
+                      {result.data.empresaNome && <div className="flex justify-between"><span>Empresa:</span><span>{maskName(result.data.empresaNome)}</span></div>}
+                      {result.data.cnpjEmpresa && <div className="flex justify-between"><span>CNPJ:</span><span>{result.data.cnpjEmpresa.replace(/\D/g, '').replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')}</span></div>}
+                      {result.data.meiNomeFantasia && <div className="flex justify-between"><span>MEI Fantasia:</span><span>{maskName(result.data.meiNomeFantasia)}</span></div>}
+                    </div>
                   </div>
+
                 </div>
               </>
             ) : (
