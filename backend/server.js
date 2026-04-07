@@ -50,12 +50,25 @@ const upload = multer({
 app.use(express.json({ limit: '10mb' }));
 const allowedOrigins = process.env.NODE_ENV === 'production' 
   ? ['https://portalcontrib-frontend.onrender.com']
-  : ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173'];
+  : ['http://localhost:5173', 'http://localhost:3000', 'http://127.0.0.1:5173', 'https://portalcontrib-frontend.onrender.com']; // Added prod for local testing
 
 app.use(cors({ 
   origin: allowedOrigins,
-  credentials: true 
-})); // Removed local /uploads serving - S3 URLs now
+  credentials: true,
+  optionsSuccessStatus: 200 // For legacy browser support
+})); // Enhanced CORS
+
+// 🔍 CORS Debug Logger (before routes)
+app.use('/api/', (req, res, next) => {
+  console.log('🌐 CORS:', {
+    origin: req.get('origin'),
+    method: req.method,
+    url: req.originalUrl,
+    node_env: process.env.NODE_ENV,
+    allowed: allowedOrigins.includes(req.get('origin') || '') || allowedOrigins.some(o => req.get('origin')?.includes(o.replace('https://', '').replace('http://', '')))
+  });
+  next();
+});
 
 // Rate limiting
 const limiter = rateLimit({
@@ -81,6 +94,18 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
+// 🔍 CORS Test Endpoint
+app.get('/api/cors-test', (req, res) => {
+  res.json({ 
+    success: true, 
+    origin: req.get('origin'),
+    allowedOrigins,
+    node_env: process.env.NODE_ENV,
+    timestamp: new Date().toISOString(),
+    message: 'CORS headers should be present'
+  });
+});
+
 // Health check
 app.get('/api/health', async (req, res) => {
   try {
@@ -95,6 +120,16 @@ app.get('/api/health', async (req, res) => {
 
 // Existing routes (contribuinte, validate-cpf) - UNCHANGED
 app.get('/api/contribuinte/:id', async (req, res) => {
+  // 🔧 Explicit CORS headers for this critical route
+  res.header('Access-Control-Allow-Origin', allowedOrigins.includes(req.get('origin') || '') ? req.get('origin') : allowedOrigins[0]);
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+  
   try {
     const id = parseInt(req.params.id);
     if (isNaN(id) || id <= 0) return res.status(400).json({ error: 'ID inválido' });
