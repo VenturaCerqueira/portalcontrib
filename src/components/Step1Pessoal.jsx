@@ -68,6 +68,8 @@ const Step1Pessoal = ({ register, control, errors, trigger, setValue, watch }) =
             <UserGroupIcon className="w-7 h-7 mr-3 text-blue-600" />
             Dados Pessoais
           </h3>
+          
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">

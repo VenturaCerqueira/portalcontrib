@@ -28,7 +28,7 @@ export const useFormController = () => {
     setNotifications(prev => prev.filter(n => n.id !== id));
   }, []);
 
-const form = useForm({
+  const form = useForm({
     resolver: zodResolver(cadastroSchema),
     mode: 'onBlur',
     defaultValues: {
@@ -67,10 +67,10 @@ const form = useForm({
     }
   });
 
-const { register, handleSubmit, formState: { errors }, control, reset, trigger, watch, getValues, setValue, formState } = form;
+  const { register, handleSubmit, formState: { errors }, control, reset, trigger, watch, getValues, setValue, formState } = form;
 
   const stepFieldsMap = {
-1: ['nome','cpf','dataNascimento','sexo','estadoCivil','celular','logradouro','endereco','bairro','cep','fotoDocumento'],
+    1: ['nome','cpf','dataNascimento','sexo','estadoCivil','celular','logradouro','endereco','bairro','cep','fotoDocumento'],
     2: ['tipoLocalAtividade','principaisProdutos','localNegocio','jaTrabalhaPrefeituraEventos'],
     3: ['situacaoOcupacional', 'empresaNome', 'cnpjEmpresa', 'cnpjMEI', 'meiNomeFantasia']
   };
@@ -81,55 +81,44 @@ const { register, handleSubmit, formState: { errors }, control, reset, trigger, 
 
   const isStepValid = stepErrors.length === 0;
 
-
-const nextStep = async () => {   
-  // console.log('🚀 Next button clicked - currentStep:', currentStep);
-  setShowErrors(true);
-    
-  // const values = getValues();
-  // console.log('📊 All form values:', Object.keys(values).reduce((acc, k) => {
-  //   acc[k] = values[k] ? (values[k].name ? `[FILE: ${values[k].name}]` : values[k].toString().substring(0,50)) : 'EMPTY';
-  //   return acc;
-  // }, {}));
-    
-  const currentStepFields = getCurrentStepFields();
-  let stepValid = await trigger(currentStepFields);
-  if (currentStep === 3) {
-    const unmaskCPF = (masked) => masked ? masked.replace(/\D/g, '') : '';
-    const values = getValues();
-    if (values.situacaoOcupacional === 'informal' && values.cpf) {
-      const rawCPF = unmaskCPF(values.cpf);
-      setValue('cpfInformal', rawCPF);
-      stepValid = await trigger(['cpfInformal', ...currentStepFields]);
+  const nextStep = async () => {   
+    setShowErrors(true);
+      
+    const currentStepFields = getCurrentStepFields();
+    let stepValid = await trigger(currentStepFields);
+    if (currentStep === 3) {
+      const unmaskCPF = (masked) => masked ? masked.replace(/\D/g, '') : '';
+      const values = getValues();
+      if (values.situacaoOcupacional === 'informal' && values.cpf) {
+        const rawCPF = unmaskCPF(values.cpf);
+        setValue('cpfInformal', rawCPF);
+        stepValid = await trigger(['cpfInformal', ...currentStepFields]);
+      }
     }
-  }
-  // console.log('✅ Step validation result:', stepValid);
-  // console.log('🚫 Step errors fields:', stepErrors);
-  
-  if (!stepValid) {
-    const failingFields = currentStepFields.filter(field => formState.errors[field]);
-    const fieldNames = failingFields.map(f => f.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())).join(', ');
-    // console.log('🚫 Step BLOCKED. Failing fields:', failingFields);
-    addNotification('error', `Passo ${currentStep}`, `Campos obrigatórios pendentes: ${fieldNames}. Verifique os campos vermelhos e corrija.`);
-    return;
-  }
-
-  
-  // Full validation only before review (step4) - explicit foto check
-  if (currentStep === 3) {
-    const fullValid = await trigger();
-    const fotoDocumento = getValues('fotoDocumento');
-    console.log('✅ Full validation for review:', fullValid, 'Foto:', !!fotoDocumento);
-    if (!fullValid || !fotoDocumento) {
-      console.log('❌ Full FAILED before step4:', form.formState.errors, 'Missing foto:', !fotoDocumento);
-      addNotification('error', 'Validação incompleta', !fotoDocumento ? 'Foto documento obrigatória para continuar.' : 'Complete todos os dados antes da revisão.');
+    
+    if (!stepValid) {
+      const failingFields = currentStepFields.filter(field => formState.errors[field]);
+      const fieldNames = failingFields.map(f => f.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())).join(', ');
+      addNotification('error', `Passo ${currentStep}`, `Campos obrigatórios pendentes: ${fieldNames}. Verifique os campos vermelhos e corrija.`);
       return;
     }
-  }
-  
-  console.log('✅ Advancing to step', currentStep + 1);
-  setCurrentStep(currentStep + 1);
-};
+
+    
+    // Full validation only before review (step4) - explicit foto check
+    if (currentStep === 3) {
+      const fullValid = await trigger();
+      const fotoDocumento = getValues('fotoDocumento');
+      console.log('✅ Full validation for review:', fullValid, 'Foto:', !!fotoDocumento);
+      if (!fullValid || !fotoDocumento) {
+        console.log('❌ Full FAILED before step4:', form.formState.errors, 'Missing foto:', !fotoDocumento);
+        addNotification('error', 'Validação incompleta', !fotoDocumento ? 'Foto documento obrigatória para continuar.' : 'Complete todos os dados antes da revisão.');
+        return;
+      }
+    }
+    
+    console.log('✅ Advancing to step', currentStep + 1);
+    setCurrentStep(currentStep + 1);
+  };
 
   const prevStep = () => {
     if (currentStep > 1) setCurrentStep(currentStep - 1);
@@ -157,6 +146,13 @@ const nextStep = async () => {
       
       setSuccessData(result);
       setShowSuccess(true);
+      
+      // Deadline check for inscriptions
+      const deadline = new Date('2026-04-20');
+      if (new Date() <= deadline) {
+        addNotification('warning', 'Prazo de Inscrição', `O prazo de inscrição ocorrerá das 09:00h do dia 20 de março a 20 de abril de 2026, para os munícipes de "contribuinte=1" e, após este prazo não preenchidas as vagas pelos munícipes, imediatamente abra-se a oportunidade aos demais interessados até o dia 30 de abril de 2026`, 15000);
+      }
+      
       // Don't reset - show success first
     } catch (error) {
       addNotification('error', 'Erro no envio', 'CPF já cadastrado');

@@ -11,8 +11,6 @@ import NotificationSystem from './components/NotificationSystem';
 import { getEstadoCivilOptions, getSexoOptions, getTipoLocalAtividadeOptions } from './models/CadastroModel.js';
 import { useFormController } from './controllers/FormController.js';
 
-
-
 const ESTADO_CIVIL = getEstadoCivilOptions();
 const SEXO_OPCOES = getSexoOptions();
 const TIPO_LOCAL_OPTIONS = getTipoLocalAtividadeOptions();
@@ -46,9 +44,7 @@ function App() {
     setValue
   } = useFormController();
 
-
   const [introVisible, setIntroVisible] = useState(true);
-
   const [isLoadingStart, setIsLoadingStart] = useState(false);
 
   const handleStartCadastro = async () => {
@@ -138,7 +134,40 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
+      
+      {/* Prazo de Inscrição - Global Header Alert */}
+      <div className="prazo-alert fixed top-[112px] md:top-[120px] lg:top-[128px] left-1/2 transform -translate-x-1/2 z-40 w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative bg-amber-100/90 border border-amber-400 rounded-2xl p-4 shadow-xl backdrop-blur-sm max-w-full group hover:shadow-2xl transition-all duration-300">
+          <button 
+            type="button"
+            className="absolute -top-2 -right-2 bg-white border-2 border-amber-400 rounded-full w-9 h-9 flex items-center justify-center shadow-lg hover:bg-amber-50 hover:scale-110 transition-all duration-200 z-10 font-bold text-amber-700"
+            title="Fechar aviso"
+            onClick={() => {
+              const alertDiv = document.querySelector('.prazo-alert');
+              if (alertDiv) {
+                alertDiv.remove();
+              }
+            }}
+
+
+          >
+            ✕
+          </button>
+          <div className="flex items-start space-x-3">
+            <svg className="w-8 h-8 text-amber-600 flex-shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            <span className="text-sm font-semibold text-amber-900 leading-relaxed">
+              ⚠️ <strong>Prazo de Inscrição:</strong> O prazo de inscrição ocorrerá das 09:00h do dia 20 de março a 20 de abril de 2026, para os munícipes de <strong>Riachão do Jacuípe</strong> e, após este prazo não preenchidas as vagas pelos munícipes, imediatamente abra-se a oportunidade aos demais interessados até o dia 30 de abril de 2026.
+            </span>
+          </div>
+        </div>
+      </div>
+      
       <main className="flex-1 pt-28 md:pt-32 lg:pt-36 px-4 md:px-8 lg:px-12">
+
+
+
         <div className="max-w-6xl mx-auto pb-12 md:pb-16 lg:pb-20">
           <div className="bg-white dark:bg-slate-800/95 border border-gray-200 dark:border-slate-700 rounded-3xl shadow-xl dark:shadow-2xl p-8 md:p-12">
             <ProgressBar currentStep={currentStep} />
