@@ -1,4 +1,4 @@
-import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import { ArrowRightIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
 import React from 'react'
 
 import useTypewriter from '../hooks/useTypewriter.js'
@@ -79,9 +79,7 @@ const IntroScreen = ({ onStart, showConsulta }) => {
               className="group relative w-full h-14 bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 text-slate-800 font-bold text-base rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-300/50 flex items-center justify-center"
             >
               <span className="group-hover:translate-x-1 transition-transform duration-300">Consultar cadastro</span>
-              <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
+<ChevronRightIcon className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300 flex-shrink-0" />
             </button>
           </div>
 

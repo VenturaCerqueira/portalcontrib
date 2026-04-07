@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { ArrowLeftIcon, MagnifyingGlassIcon, CheckCircleIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftIcon, MagnifyingGlassIcon, CheckCircleIcon, XMarkIcon, UserPlusIcon } from '@heroicons/react/24/outline';
 import ApiService from '../models/ApiService.js';
 import { masks } from '../hooks/useMask.jsx';
 
@@ -57,13 +57,13 @@ const ConsultaScreen = ({ onBackToIntro, onStartCadastro }) => {
       <div className="max-w-md w-full mx-auto bg-white/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/50 p-8 space-y-6">
         
         {/* Header */}
-        <div className="text-center">
-          <div className="w-20 h-20 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <MagnifyingGlassIcon className="w-10 h-10 text-white" />
-          </div>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-slate-700 bg-clip-text text-transparent mb-2">
-            Consultar Cadastro
-          </h1>
+<div className="text-center">
+  <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+    <MagnifyingGlassIcon className="w-10 h-10 text-white" />
+  </div>
+  <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-slate-700 bg-clip-text text-transparent mb-2">
+    Consultar Cadastro
+  </h1>
           <p className="text-slate-600 text-sm">Verifique se já possui cadastro como ambulante</p>
         </div>
 
@@ -127,12 +127,11 @@ const ConsultaScreen = ({ onBackToIntro, onStartCadastro }) => {
                 <div className="flex items-center justify-center mb-4">
                   <CheckCircleIcon className="w-12 h-12 text-emerald-500" />
                 </div>
-                <h3 className="text-lg font-bold text-emerald-900 text-center mb-3">✅ Cadastro Encontrado!</h3>
+                <h3 className="text-lg font-bold text-emerald-900 text-center mb-3"> Cadastro Encontrado!</h3>
                 <div className="space-y-2 text-sm">
-                  <div className="flex justify-between"><span>Nome:</span><span className="font-semibold">{result.data.nome}</span></div>
-                  <div className="flex justify-between"><span>Celular:</span><span>{result.data.celular}</span></div>
-                  <div className="flex justify-between"><span>Data:</span><span className="text-emerald-700 font-semibold">{formatDate(result.data.created_at)}</span></div>
-                  <div className="text-xs text-emerald-700 text-center mt-3 bg-emerald-100 px-3 py-1 rounded-full">ID: #{result.data.id}</div>
+                  <div className="flex justify-between items-center"><span className="flex items-center"><svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>Nome:</span><span className="font-semibold">{result.data.nome}</span></div>
+                  <div className="flex justify-between items-center"><span className="flex items-center"><svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 01 1.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>Celular:</span><span>{result.data.celular}</span></div>
+                  <div className="flex justify-between items-center"><span className="flex items-center"><svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Data:</span><span className="text-emerald-700 font-semibold">{formatDate(result.data.created_at)}</span></div>
                 </div>
               </>
             ) : (
@@ -167,9 +166,10 @@ const ConsultaScreen = ({ onBackToIntro, onStartCadastro }) => {
           ) : (
             <button
               onClick={onStartCadastro}
-              className="flex-1 bg-gradient-to-r from-[#0052cc] to-blue-600 hover:from-[#0052cc]/90 hover:to-blue-600/90 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all"
+              className="flex-1 bg-gradient-to-r from-[#0052cc] to-blue-600 hover:from-[#0052cc]/90 hover:to-blue-600/90 text-white font-bold py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center space-x-2"
             >
-              Fazer Cadastro
+              <UserPlusIcon className="w-5 h-5 flex-shrink-0" />
+              <span>Fazer Cadastro</span>
             </button>
           )}
         </div>

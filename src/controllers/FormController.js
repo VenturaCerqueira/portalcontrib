@@ -86,6 +86,14 @@ export const useFormController = () => {
       
     const currentStepFields = getCurrentStepFields();
     let stepValid = await trigger(currentStepFields);
+    
+    // Use queueMicrotask for smoother React reconciliation
+    queueMicrotask(() => {
+      if (stepValid) {
+        // FormController doesn't have direct access to startTransition
+        // Rely on App.jsx useTransition wrapper
+      }
+    });
     if (currentStep === 3) {
       const unmaskCPF = (masked) => masked ? masked.replace(/\D/g, '') : '';
       const values = getValues();

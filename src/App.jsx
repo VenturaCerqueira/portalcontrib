@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeftIcon, ArrowRightIcon, XMarkIcon, MapPinIcon } from '@heroicons/react/24/outline';
+import { useTransition, useMemo, memo } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ProgressBar from './components/ProgressBar';
@@ -59,6 +60,12 @@ function App() {
     setIntroVisible(true);
   };
 
+  const [isPending, startTransition] = useTransition();
+  
+  const MemoStep1Pessoal = useMemo(() => memo(Step1Pessoal), []);
+  const MemoStep2Atividade = useMemo(() => memo(Step2Atividade), []);
+  const MemoStep3Trabalho = useMemo(() => memo(Step3Trabalho), []);
+
   const handleStartCadastro = async () => {
     setIsLoadingStart(true);
     try {
@@ -77,7 +84,9 @@ function App() {
       return;
     }
     setShowErrors(true);
-    nextStep();
+    startTransition(() => {
+      nextStep();
+    });
   };
 
   if (consultaVisible) {
@@ -200,8 +209,8 @@ function App() {
   }
 }} className="space-y-8">
               {currentStep === 1 && (
-                <Step1Pessoal 
-                  key={currentStep}
+                <MemoStep1Pessoal 
+                  key={`step-${currentStep}`}
                   register={register} 
                   control={control} 
                   errors={errors} 
@@ -211,8 +220,8 @@ function App() {
                 />
               )}
               {currentStep === 2 && (
-                <Step2Atividade 
-                  key={currentStep}
+                <MemoStep2Atividade 
+                  key={`step-${currentStep}`}
                   control={control}
                   errors={errors} 
                   register={register}
@@ -220,7 +229,8 @@ function App() {
                 />
               )}
               {currentStep === 3 && (
-                <Step3Trabalho 
+                <MemoStep3Trabalho 
+                  key={`step-${currentStep}`}
                   register={register} 
                   errors={errors} 
                   watch={watch} 
@@ -282,7 +292,9 @@ function App() {
                           </button>
                         </div>
                         <dl className="grid grid-cols-1 gap-3 text-sm">
-                          <div className="flex justify-between"><span>Nome:</span><span className="font-semibold">{getValues('nome') || '—'}</span></div>
+                  {reviewData.personal.map(({ label, value }) => (
+                    <div key={label} className="flex justify-between"><span>{label}:</span><span className="font-semibold">{value || '—'}</span></div>
+                  ))}
                           <div className="flex justify-between"><span>CPF:</span><span className="font-semibold">{getValues('cpf') || '—'}</span></div>
                           <div className="flex justify-between"><span>Sexo:</span><span>{SEXO_OPCOES.find(o => o.value === getValues('sexo'))?.label || '—'}</span></div>
                           <div className="flex justify-between"><span>Data Nasc:</span><span>{getValues('dataNascimento') ? new Date(getValues('dataNascimento')).toLocaleDateString('pt-BR') : '—'}</span></div>
