@@ -3,7 +3,7 @@ import React from 'react'
 
 import useTypewriter from '../hooks/useTypewriter.js'
 
-const IntroScreen = ({ onStart }) => {
+const IntroScreen = ({ onStart, showConsulta }) => {
   const { displayText, cursorVisible } = useTypewriter({
     text: 'PREFEITURA DE RIACHÃO DO JACUÍPE',
     speed: 120,
@@ -13,13 +13,13 @@ const IntroScreen = ({ onStart }) => {
   return (
     <div className="min-h-screen flex flex-col max-h-screen overflow-hidden">
       {/* Hero Background - Header colors */}
-      <div className="absolute inset-0 bg-gray-50/80 dark:bg-slate-900/80"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-50/90 to-gray-50/90 dark:from-slate-900/80 dark:to-gray-900/80"></div>
       
-      <main className="relative z-10 flex flex-col items-center justify-center px-4 py-12 sm:py-16 h-full overflow-y-auto">
-        <div className="max-w-4xl w-full mx-auto text-center">
+      <main className="relative z-10 flex flex-col items-center justify-center px-4 py-8 sm:py-12 min-h-screen max-h-screen overflow-hidden">
+        <div className="max-w-2xl w-full mx-auto text-center space-y-6 sm:space-y-8">
           {/* Circular Modern Business Logo - EXATAMENTE ACIMA do Portal Oficial */}
           <div className="animate-in slide-in-from-top-4 fade-in duration-1000 mb-8 px-4 flex justify-center">
-            <div className="relative group w-48 h-48 lg:w-52 lg:h-52 rounded-full bg-white/90 backdrop-blur-sm shadow-xl border-3 border-gradient-to-r from-[#0052cc]/40 to-blue-600/40 hover:from-[#0052cc]/70 hover:to-blue-600/70 dark:from-blue-600/50 dark:to-blue-400/50 dark:hover:from-blue-600/70 dark:hover:to-blue-400/80 ring-1 ring-[#0052cc]/20 hover:ring-[#0052cc]/40 overflow-hidden mx-auto transition-all duration-500 hover:scale-[1.05] hover:-rotate-1 hover:shadow-[0_20px_40px_rgba(0,82,204,0.25)]">
+            <div className="relative group w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-white/95 backdrop-blur-md shadow-2xl border-2 border-slate-200/50 hover:border-slate-300/70 ring-1 ring-slate-200/30 hover:ring-slate-300/50 overflow-hidden mx-auto transition-all duration-400 hover:scale-105 hover:shadow-2xl">
 
 
               <img 
@@ -36,12 +36,12 @@ const IntroScreen = ({ onStart }) => {
 
           {/* Main Title - Reduced sizes */}
           <div className="animate-in slide-in-from-top-8 fade-in duration-1000 mb-6">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold leading-tight tracking-tight bg-gradient-to-r from-[#0052cc] to-blue-600 bg-clip-text text-transparent mb-4">
-              <span className="block font-light text-base sm:text-lg md:text-xl text-[#0052cc]/80 dark:text-blue-400 mb-1">Portal Oficial</span>
-              <span className="font-bold bg-gradient-to-r from-[#0052cc] to-blue-600 bg-clip-text text-transparent min-w-[20rem] inline-block">{displayText}</span>
-{cursorVisible && <span className="font-bold bg-gradient-to-r from-[#0052cc] to-blue-600 bg-clip-text text-transparent animate-pulse">|</span>}
+            <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold leading-tight tracking-tight bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-3">
+              <span className="block font-semibold text-sm sm:text-base md:text-lg text-slate-700 mb-1">Portal Oficial</span>
+              <span className="font-black text-lg sm:text-xl md:text-2xl lg:text-3xl bg-gradient-to-r from-indigo-700 via-blue-700 to-slate-700 bg-clip-text text-transparent min-w-[18rem] inline-block">{displayText}</span>
+              {cursorVisible && <span className="font-mono text-lg sm:text-xl animate-pulse text-indigo-600">|</span>}
               <br className="sm:hidden" />
-              <span className="block text-sm sm:text-base md:text-lg text-slate-700 dark:text-slate-200 font-semibold">Credenciamento de Ambulantes</span>
+              <span className="block text-xs sm:text-sm md:text-base font-semibold text-slate-700 dark:text-slate-300">Credenciamento de Ambulantes</span>
             </h1>
             <div className="w-20 sm:w-24 md:w-28 h-1 bg-gradient-to-r from-[#0052cc] to-blue-600 mx-auto rounded-full shadow-lg"></div>
           </div>
@@ -55,25 +55,39 @@ const IntroScreen = ({ onStart }) => {
           <div className="animate-in slide-in-from-bottom-4 fade-in duration-1000 delay-400 w-full max-w-2xl mx-auto mb-8 px-2">
           </div>
 
-          {/* CTA Button */}
-          <div className="pt-6 sm:pt-8 animate-in slide-in-from-bottom-4 fade-in duration-1000 delay-600">
+          {/* CTAs profissionais */}
+          <div className="space-y-2 pt-4 sm:pt-6 animate-in slide-in-from-bottom-2 fade-in duration-800 delay-400 max-w-sm mx-auto">
+            {/* Primary CTA */}
             <button
               onClick={onStart}
-              className="group relative inline-flex items-center px-6 sm:px-8 md:px-12 py-3 sm:py-4 bg-gradient-to-r from-[#0052cc] to-blue-600 hover:from-[#0052cc]/90 hover:to-blue-600/90 text-white font-bold text-sm sm:text-base md:text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-[#0052cc]/20 w-full max-w-sm sm:max-w-md mx-auto"
+              className="group w-full h-14 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold text-base rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-indigo-500/30 flex items-center justify-center"
             >
+              <span className="group-hover:translate-x-1 transition-transform duration-300 mr-2">Iniciar Cadastro</span>
+              <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+            </button>
 
+            {/* Divider */}
+            <div className="flex items-center">
+              <div className="flex-1 h-px bg-gradient-to-r from-slate-200 to-slate-300"></div>
+              <span className="px-3 text-xs text-slate-500 font-medium uppercase tracking-wide">ou</span>
+              <div className="flex-1 h-px bg-gradient-to-r from-slate-200 to-slate-300"></div>
+            </div>
 
-              <span className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <span className="relative flex items-center space-x-2 sm:space-x-3 w-full justify-center">
-                <span>Iniciar Cadastro</span>
-                <ArrowRightIcon className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 group-hover:translate-x-1 transition-transform duration-300 flex-shrink-0" />
-              </span>
+            {/* Botão consulta estilo Iniciar (cinza/branco) */}
+            <button
+              onClick={showConsulta}
+              className="group relative w-full h-14 bg-gradient-to-r from-slate-100 to-slate-200 hover:from-slate-200 hover:to-slate-300 text-slate-800 font-bold text-base rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-300/50 flex items-center justify-center"
+            >
+              <span className="group-hover:translate-x-1 transition-transform duration-300">Consultar cadastro</span>
+              <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
             </button>
           </div>
 
           {/* Helper Text */}
-          <p className="text-xs text-gray-500 dark:text-slate-400 mt-6 sm:mt-8 max-w-md mx-auto px-4 animate-in slide-in-from-bottom-4 fade-in duration-1000 delay-800">
-            Processo seguro. Dados criptografados. 100% digital.
+          <p className="text-xs text-slate-500/80 dark:text-slate-400 mt-4 max-w-sm mx-auto px-2 animate-in slide-in-from-bottom-2 fade-in duration-600">
+            Processo 100% digital e seguro • Dados criptografados
           </p>
         </div>
       </main>

@@ -73,6 +73,25 @@ class ApiService {
       return false;
     }
   }
+
+  // 🆕 Check if ambulante cadastro exists
+  static async checkAmbulante(rawCPF) {
+    try {
+      const response = await fetch(`${BACKEND_URL}/check-ambulante/${rawCPF}`);
+      
+      if (!response.ok) {
+        if (response.status === 429) {
+          throw new Error('Muitas requisições. Aguarde 15s.');
+        }
+        const errorText = await response.text();
+        throw new Error(`Servidor: ${response.status}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      throw new Error('Erro ao consultar cadastro ambulante');
+    }
+  }
 }
 
 export default ApiService;

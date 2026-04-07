@@ -143,6 +143,41 @@ app.get('/api/validate-cpf/:cpf', async (req, res) => {
   }
 });
 
+// 🆕 Check ambulante registration
+app.get('/api/check-ambulante/:cpf', async (req, res) => {
+  try {
+    const cpfRaw = req.params.cpf.replace(/\D/g, '');
+    if (cpfRaw.length !== 11) {
+      return res.status(400).json({ found: false, error: 'CPF inválido (11 dígitos)' });
+    }
+
+    const query = `
+      SELECT id, nome, celular, created_at, situacao
+      FROM ambulante 
+      WHERE cpf = ? AND situacao = 1 
+      LIMIT 1
+    `;
+
+    const [rows] = await pool.execute(query, [cpfRaw]);
+    
+    if (rows.length > 0) {
+      res.json({ 
+        found: true, 
+        data: rows[0],
+        message: '✅ Cadastro encontrado!' 
+      });
+    } else {
+      res.json({ 
+        found: false, 
+        message: '❌ Nenhum cadastro ambulante para este CPF' 
+      });
+    }
+  } catch (err) {
+    console.error('Erro check-ambulante:', err);
+    res.status(500).json({ found: false, error: 'Erro servidor' });
+  }
+});
+
 app.post('/api/cadastros', upload.single('fotoDocumento'), async (req, res) => {
   const cadastro = req.body;
   const file = req.file;

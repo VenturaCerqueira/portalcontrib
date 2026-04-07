@@ -7,6 +7,7 @@ import IntroScreen from './components/IntroScreen';
 import Step1Pessoal from './components/Step1Pessoal';
 import Step2Atividade from './components/Step2Atividade';
 import Step3Trabalho from './components/Step3Trabalho';
+import ConsultaScreen from './components/ConsultaScreen';
 import NotificationSystem from './components/NotificationSystem';
 import { getEstadoCivilOptions, getSexoOptions, getTipoLocalAtividadeOptions } from './models/CadastroModel.js';
 import { useFormController } from './controllers/FormController.js';
@@ -45,7 +46,18 @@ function App() {
   } = useFormController();
 
   const [introVisible, setIntroVisible] = useState(true);
+  const [consultaVisible, setConsultaVisible] = useState(false);
   const [isLoadingStart, setIsLoadingStart] = useState(false);
+
+  const showConsulta = () => {
+    setIntroVisible(false);
+    setConsultaVisible(true);
+  };
+
+  const backToIntro = () => {
+    setConsultaVisible(false);
+    setIntroVisible(true);
+  };
 
   const handleStartCadastro = async () => {
     setIsLoadingStart(true);
@@ -68,8 +80,12 @@ function App() {
     nextStep();
   };
 
+  if (consultaVisible) {
+    return <ConsultaScreen onBackToIntro={backToIntro} onStartCadastro={handleStartCadastro} />;
+  }
+
   if (introVisible && !isLoadingStart) {
-    return <IntroScreen onStart={handleStartCadastro} />;
+    return <IntroScreen onStart={handleStartCadastro} showConsulta={showConsulta} />;
   }
 
   if (introVisible && isLoadingStart) {
