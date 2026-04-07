@@ -5,11 +5,7 @@ services:
     rootDir: backend
     buildCommand: |
       npm ci &&
-      cd .. && npm ci && npm run build &&
-      cd backend &&
-      rm -rf public && mkdir -p public &&
-      cp -r ../dist/* public/ &&
-      echo "✅ Frontend copied to backend/public/"
+      echo "✅ Backend build completo - Frontend servido separadamente ou via Vite"
     startCommand: node server.js
     envVars:
       - key: NODE_VERSION

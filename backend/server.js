@@ -315,7 +315,15 @@ app.post('/api/cadastros', upload.single('fotoDocumento'), async (req, res) => {
   }
 });
 
-// SPA fallback
+// Protege /api routes - 404 JSON
+app.use((req, res, next) => {
+  if (req.originalUrl.startsWith('/api/')) {
+    return res.status(404).json({ error: 'Endpoint não encontrado', path: req.originalUrl });
+  }
+  next();
+});
+
+// SPA fallback apenas para non-API paths
 app.use(express.static('public'));
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, 'public/index.html'));
