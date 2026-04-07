@@ -87,7 +87,7 @@ const IntroScreen = ({ onStart, showConsulta }) => {
 
           {/* Helper Text */}
           <p className="text-xs text-slate-500/80 dark:text-slate-400 mt-4 max-w-sm mx-auto px-2 animate-in slide-in-from-bottom-2 fade-in duration-600">
-            Processo 100% digital e seguro • Dados criptografados
+            © 2026 - Desenvolvido por Keep Informática.
           </p>
         </div>
       </main>
