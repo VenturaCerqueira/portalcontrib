@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Bars3Icon, XMarkIcon, BriefcaseIcon, ArrowTopRightOnSquareIcon } from '@heroicons/react/24/outline'
 
-import ApiService from '../models/ApiService'
+import ApiService from '../models/ApiService.js'
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
